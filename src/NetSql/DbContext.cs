@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,11 @@ namespace NetSql
     /// </summary>
     public abstract class DbContext : IDbContext
     {
+        /// <summary>
+        /// 数据集集合
+        /// </summary>
+        private readonly Dictionary<Type, IDbSet> _dbSets = new Dictionary<Type, IDbSet>();
+
         #region ==属性==
 
         /// <summary>
@@ -63,20 +69,9 @@ namespace NetSql
         /// <returns></returns>
         public IDbSet<TEntity> Set<TEntity>() where TEntity : Entity, new()
         {
-            var properties = GetType().GetRuntimeProperties()
-                .Where(p => !p.IsStatic()
-                            && !p.GetIndexParameters().Any()
-                            && p.PropertyType.GetTypeInfo().IsGenericType
-                            && (p.PropertyType.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)));
-
-            var entityType = typeof(TEntity);
-            foreach (var propertyInfo in properties)
-            {
-                if (entityType == propertyInfo.PropertyType.GenericTypeArguments.Single())
-                {
-                    return (IDbSet<TEntity>)propertyInfo.GetValue(this);
-                }
-            }
+            var dbSet = _dbSets.FirstOrDefault(m => m.Key == typeof(TEntity));
+            if (dbSet.Value != null)
+                return (IDbSet<TEntity>)dbSet.Value;
 
             throw new NullReferenceException("未找到指定的实体数据集");
         }
@@ -102,6 +97,9 @@ namespace NetSql
                 var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
                 var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
                 propertyInfo.SetValue(this, dbSet);
+
+                //加入缓存
+                _dbSets.Add(entityType, (IDbSet)dbSet);
             }
         }
 

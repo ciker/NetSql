@@ -41,6 +41,10 @@ namespace NetSql.SqlAdapter
             {
                 sql.AppendFormat(" {0} ", sort);
             }
+            else
+            {
+                sql.AppendFormat("ORDER BY Id DESC");
+            }
 
             sql.AppendFormat(" OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY;", skip, size);
 

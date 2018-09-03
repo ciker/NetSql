@@ -54,7 +54,6 @@ namespace NetSql.Repository
         /// <returns></returns>
         Task<bool> UpdateAsync(TEntity entity, IDbTransaction transaction = null);
 
-
         /// <summary>
         /// 根据主键查询
         /// </summary>

@@ -16,7 +16,8 @@ namespace NetSql.MySql.Test
 
         public RepositoryTest()
         {
-            var dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
+            //var dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
+            var dbContext = new BlogDbContext(new DbContextOptions("Server=.;Initial Catalog=NetSqlTest;User ID=sa;Password=oldli!@#123"));
             _repository = new ArticleRepository(dbContext);
         }
 
@@ -91,7 +92,7 @@ namespace NetSql.MySql.Test
         public async void PaginationTest()
         {
             var paging = new Paging(1, 20);
-            var list = await _repository.PaginationAsync(paging, m => m.Id > 1000);
+            var list = await _repository.PaginationAsync(paging, m => m.Id > 100);
 
             Assert.True(paging.TotalCount > 0);
         }

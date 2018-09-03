@@ -16,7 +16,8 @@ namespace NetSql.MySql.Test
 
         public DbSetTests()
         {
-            _dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
+            //_dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
+            _dbContext = new BlogDbContext(new DbContextOptions("Server=.;Initial Catalog=NetSqlTest;User ID=sa;Password=oldli!@#123"));
             _dbSet = _dbContext.Set<Article>();
 
             //预热
@@ -43,14 +44,14 @@ namespace NetSql.MySql.Test
         }
 
         [Fact]
-        public void BatchInsertTest()
+        public async void BatchInsertTest()
         {
             var sw = new Stopwatch();
             sw.Start();
 
             var tran = _dbContext.BeginTransaction();
 
-            for (var i = 0; i < 10000; i++)
+            for (var i = 0; i < 1000; i++)
             {
                 var article = new Article
                 {
@@ -63,7 +64,7 @@ namespace NetSql.MySql.Test
                     CreatedTime = DateTime.Now
                 };
 
-                _dbSet.InsertAsync(article, tran);
+                await _dbSet.InsertAsync(article, tran);
             }
 
             tran.Commit();

@@ -11,8 +11,16 @@ namespace NetSql
     /// <summary>
     /// 实体数据集
     /// </summary>
+    public interface IDbSet
+    {
+
+    }
+
+    /// <summary>
+    /// 实体数据集
+    /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public interface IDbSet<TEntity> where TEntity : Entity, new()
+    public interface IDbSet<TEntity> : IDbSet where TEntity : Entity, new()
     {
         /// <summary>
         /// 新增
