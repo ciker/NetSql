@@ -9,6 +9,8 @@ using NetSql.Enums;
 using NetSql.Internal;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable;
+using NetSql.SqlQueryable.Abstract;
+using NetSql.SqlQueryable.Impl;
 
 namespace NetSql
 {
@@ -16,7 +18,7 @@ namespace NetSql
     {
         #region ==属性==
 
-        private readonly DbContext _context;
+        private readonly IDbContext _context;
 
         private readonly IEntityDescriptor _descriptor;
 
@@ -28,7 +30,7 @@ namespace NetSql
 
         #region ==构造函数==
 
-        public DbSet(ISqlAdapter sqlAdapter, DbContext context)
+        public DbSet(ISqlAdapter sqlAdapter, IDbContext context)
         {
             _sqlAdapter = sqlAdapter;
             _context = context;
@@ -102,7 +104,7 @@ namespace NetSql
 
         public INetSqlQueryable<TEntity> Find(Expression<Func<TEntity, bool>> expression = null, IDbTransaction transaction = null)
         {
-            return new NetSqlQueryable<TEntity>(expression, this, _descriptor, _sqlStatement, _sqlAdapter, transaction);
+            return new NetSqlQueryable<TEntity>(this, _sqlAdapter, _sqlStatement, expression);
         }
 
         public Task<int> ExecuteAsync(string sql, object param = null, IDbTransaction transaction = null, CommandType? commandType = null)
@@ -129,6 +131,20 @@ namespace NetSql
         {
             return GetCon(transaction).QueryAsync<T>(sql, param, transaction, commandType: commandType);
         }
+
+        #region ==左连接==
+
+        public INetSqlQueryable<TEntity, TEntity2> LeftJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : Entity, new()
+        {
+            return new NetSqlQueryable<TEntity, TEntity2>(this, _sqlAdapter, onExpression);
+        }
+
+        public INetSqlQueryable<TEntity, TEntity2> InnerJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : Entity, new()
+        {
+            return new NetSqlQueryable<TEntity, TEntity2>(this, _sqlAdapter, onExpression, JoinType.Inner);
+        }
+
+        #endregion
 
         #region ==私有方法==
 

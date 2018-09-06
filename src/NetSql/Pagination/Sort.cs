@@ -17,7 +17,7 @@ namespace NetSql.Pagination
         /// </summary>
         public SortType Type { get; }
 
-        public Sort(string orderBy, SortType type)
+        public Sort(string orderBy, SortType type = SortType.Asc)
         {
             OrderBy = orderBy;
             Type = type;

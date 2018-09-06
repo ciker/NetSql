@@ -39,6 +39,11 @@ namespace NetSql.Entities
         /// </summary>
         public ColumnDescriptor PrimaryKey { get; private set; }
 
+        public ColumnDescriptor GetColumnByPropertyName(string name)
+        {
+            return Columns.FirstOrDefault(m => m.PropertyInfo.Name.Equals(name));
+        }
+
         #endregion
 
         #region ==构造器==
@@ -79,9 +84,14 @@ namespace NetSql.Entities
                 && Type.GetTypeCode(p.PropertyType) != TypeCode.Object
                 && p.GetCustomAttributes().All(attr => attr.GetType() != typeof(IgnoreAttribute))).ToList();
 
+            var primaryKey = properties.FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
+            if (primaryKey != null)
+                Columns.Add(Property2Column(primaryKey));
+
             foreach (var p in properties)
             {
-                Columns.Add(Property2Column(p));
+                if (primaryKey != p)
+                    Columns.Add(Property2Column(p));
             }
         }
 

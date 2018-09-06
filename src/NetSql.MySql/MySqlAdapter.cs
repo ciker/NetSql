@@ -21,19 +21,18 @@ namespace NetSql.MySql
         /// </summary>
         public override string IdentitySql => "SELECT LAST_INSERT_ID() ID;";
 
-        public override string GeneratePagingSql(string tableName, string queryWhere, int skip, int size, string sort = null, string columns = null)
+        public override string GeneratePagingSql(string @select, string table, string @where, string sort, int skip, int take)
         {
-            if (columns.IsNull())
-                columns = "*";
+            var sqlBuilder = new StringBuilder();
+            sqlBuilder.AppendFormat("SELECT {0} FROM {1}", select, table);
+            if (where.NotNull())
+                sqlBuilder.AppendFormat(" WHERE {0}", where);
 
-            var sb = new StringBuilder($"SELECT {columns} FROM {AppendQuote(tableName)} ");
-            AppendQueryWhere(sb, queryWhere);
             if (sort.NotNull())
-            {
-                sb.AppendFormat(" {0} ", sort);
-            }
-            sb.AppendFormat(" LIMIT {0},{1};", skip, size);
-            return sb.ToString();
+                sqlBuilder.AppendFormat("ORDER BY {0}", sort);
+
+            sqlBuilder.AppendFormat(" LIMIT {0},{1}", skip, take);
+            return sqlBuilder.ToString();
         }
     }
 }

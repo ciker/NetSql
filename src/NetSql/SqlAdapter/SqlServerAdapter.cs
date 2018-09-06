@@ -20,35 +20,15 @@ namespace NetSql.SqlAdapter
         /// </summary>
         public override string IdentitySql => "SELECT SCOPE_IDENTITY() ID;";
 
-        /// <summary>
-        /// 获取分页语句
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="queryWhere">查询条件</param>
-        /// <param name="size"></param>
-        /// <param name="sort">排序</param>
-        /// <param name="columns"></param>
-        /// <param name="skip"></param>
-        /// <returns></returns>
-        public override string GeneratePagingSql(string tableName, string queryWhere, int skip, int size, string sort = null, string columns = null)
+        public override string GeneratePagingSql(string @select, string table, string where, string sort, int skip, int take)
         {
-            if (columns.IsNull())
-                columns = "*";
+            var sqlBuilder = new StringBuilder();
+            sqlBuilder.AppendFormat("SELECT * FROM (SELECT {0},ROW_NUMBER() OVER(ORDER BY {1}) AS row_num FROM {2}", select, sort, table);
+            if (where.NotNull())
+                sqlBuilder.AppendFormat(" WHERE {0}", where);
 
-            var sql = new StringBuilder($"SELECT {columns} FROM {AppendQuote(tableName)} ");
-            AppendQueryWhere(sql, queryWhere);
-            if (sort.NotNull())
-            {
-                sql.AppendFormat(" {0} ", sort);
-            }
-            else
-            {
-                sql.AppendFormat("ORDER BY Id DESC");
-            }
-
-            sql.AppendFormat(" OFFSET {0} ROW FETCH NEXT {1} ROWS ONLY;", skip, size);
-
-            return sql.ToString();
+            sqlBuilder.AppendFormat(") AS m WHERE m.row_num BETWEEN {0} AND {1}", skip + 1, skip + take);
+            return sqlBuilder.ToString();
         }
     }
 }

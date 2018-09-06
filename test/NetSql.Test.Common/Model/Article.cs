@@ -13,18 +13,19 @@ namespace NetSql.Test.Common.Model
 
         public string Body { get; set; }
 
-        public Category Category { get; set; }
-
         public int ReadCount { get; set; }
 
         public bool IsDeleted { get; set; }
 
         public DateTime CreatedTime { get; set; }
-    }
 
-    public enum Category
-    {
-        Blog,
-        Movie
+        public int UserID { get; set; }
+
+        public int TagID { get; set; }
+
+        public int CateID { get; set; }
+
+        public int CommitID { get; set; }
+
     }
 }

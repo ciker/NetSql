@@ -1,22 +1,63 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text;
+using NetSql.Enums;
+using NetSql.Pagination;
 
 namespace NetSql.Expressions
 {
     internal interface IExpressionResolve
     {
+        /// <summary>
+        /// 解析条件
+        /// </summary>
+        /// <param name="whereExpression"></param>
+        /// <returns></returns>
+        string ResolveWhere(Expression whereExpression);
 
         /// <summary>
-        /// 转换成Sql
+        /// 解析条件
         /// </summary>
-        /// <param name="exp"></param>
-        /// <returns></returns>
-        string ToSql(Expression exp);
+        /// <param name="sqlBuilder"></param>
+        /// <param name="whereExpression"></param>
+        void ResolveWhere(StringBuilder sqlBuilder, Expression whereExpression);
 
         /// <summary>
-        /// 解析查询指定列的SQL
+        /// 解析返回列
         /// </summary>
-        /// <param name="exp"></param>
+        /// <param name="selectExpression"></param>
+        string ResolveSelect(Expression selectExpression);
+
+        /// <summary>
+        /// 解析返回列
+        /// </summary>
+        /// <param name="sqlBuilder"></param>
+        /// <param name="selectExpression"></param>
+        void ResolveSelect(StringBuilder sqlBuilder, Expression selectExpression);
+
+        /// <summary>
+        /// 解析表连接
+        /// </summary>
+        string ResolveJoin();
+
+        /// <summary>
+        /// 解析表连接
+        /// </summary>
+        /// <param name="sqlBuilder"></param>
+        void ResolveJoin(StringBuilder sqlBuilder);
+
+        /// <summary>
+        /// 解析排序
+        /// </summary>
+        /// <param name="sorts"></param>
         /// <returns></returns>
-        string ToSelectSql(Expression exp);
+        string ResolveOrder(List<Sort> sorts);
+
+        /// <summary>
+        /// 解析排序
+        /// </summary>
+        /// <param name="sqlBuilder"></param>
+        /// <param name="sorts"></param>
+        void ResolveOrder(StringBuilder sqlBuilder, List<Sort> sorts);
     }
 }

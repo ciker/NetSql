@@ -2,9 +2,6 @@
 
 namespace NetSql.SqlAdapter
 {
-    /// <summary>
-    /// 数据库适配器接口
-    /// </summary>
     public interface ISqlAdapter
     {
         #region ==属性==
@@ -93,16 +90,16 @@ namespace NetSql.SqlAdapter
         void AppendQueryWhere(StringBuilder sb, string queryWhere);
 
         /// <summary>
-        /// 生成分页语句
+        /// 分页
         /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="queryWhere">查询条件</param>
-        /// <param name="skip">跳过数量</param>
-        /// <param name="size">查询数量</param>
-        /// <param name="sort">排序</param>
-        /// <param name="columns">查询指定列</param>
+        /// <param name="select"></param>
+        /// <param name="table"></param>
+        /// <param name="where"></param>
+        /// <param name="sort"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
         /// <returns></returns>
-        string GeneratePagingSql(string tableName, string queryWhere, int skip, int size, string sort = null, string columns = null);
+        string GeneratePagingSql(string select, string table, string where, string sort, int skip, int take);
 
         #endregion
 

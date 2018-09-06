@@ -27,7 +27,6 @@ namespace NetSql.MySql.Test
             var article = new Article
             {
                 Title1 = "test",
-                Category = Category.Blog,
                 Summary = "这是一篇测试文章",
                 Body = "这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章",
                 ReadCount = 10,
@@ -49,7 +48,6 @@ namespace NetSql.MySql.Test
                 var article = new Article
                 {
                     Title1 = "test" + i,
-                    Category = i % 3 == 1 ? Category.Blog : Category.Movie,
                     Summary = "这是一篇测试文章",
                     Body = "这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章",
                     ReadCount = 10,

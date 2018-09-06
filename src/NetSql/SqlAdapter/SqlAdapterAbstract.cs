@@ -103,16 +103,8 @@ namespace NetSql.SqlAdapter
                 sb.Append(queryWhere);
             }
         }
-        /// <summary>
-        /// 生成分页语句
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="queryWhere">查询条件</param>
-        /// <param name="skip">跳过数量</param>
-        /// <param name="size">查询数量</param>
-        /// <param name="sort">排序</param>
-        /// <param name="columns">查询指定列</param>
-        /// <returns></returns>
-        public abstract string GeneratePagingSql(string tableName, string queryWhere, int skip, int size, string sort = null, string columns = null);
+
+        public abstract string GeneratePagingSql(string @select, string table, string where, string sort, int skip, int take);
+
     }
 }

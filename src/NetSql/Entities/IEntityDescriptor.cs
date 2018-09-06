@@ -34,5 +34,12 @@ namespace NetSql.Entities
         ColumnDescriptor PrimaryKey { get; }
 
         #endregion
+
+        /// <summary>
+        /// 根据属性名称获取指定列
+        /// </summary>
+        /// <param name="propertyName">列对应的属性名称</param>
+        /// <returns></returns>
+        ColumnDescriptor GetColumnByPropertyName(string propertyName);
     }
 }

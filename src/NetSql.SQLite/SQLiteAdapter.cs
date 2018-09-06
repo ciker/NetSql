@@ -21,31 +21,18 @@ namespace NetSql.SQLite
         /// </summary>
         public override string IdentitySql => "SELECT LAST_INSERT_ROWID() ID;";
 
-        /// <summary>
-        /// 获取分页语句
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="queryWhere">查询条件</param>
-        /// <param name="skip"></param>
-        /// <param name="size"></param>
-        /// <param name="sort">排序</param>
-        /// <returns></returns>
-        public override string GeneratePagingSql(string tableName, string queryWhere, int skip, int size, string sort = null, string columns = null)
+        public override string GeneratePagingSql(string @select, string table, string @where, string sort, int skip, int take)
         {
-            if (columns.IsNull())
-                columns = "*";
+            var sqlBuilder = new StringBuilder();
+            sqlBuilder.AppendFormat("SELECT {0} FROM {1}", select, table);
+            if (where.NotNull())
+                sqlBuilder.AppendFormat(" WHERE {0}", where);
 
-            var sql = new StringBuilder($"SELECT {columns} FROM ");
-            sql.AppendFormat(" {0} ", AppendQuote(tableName));
-            AppendQueryWhere(sql, queryWhere);
             if (sort.NotNull())
-            {
-                sql.AppendFormat(" {0} ", sort);
-            }
+                sqlBuilder.AppendFormat("ORDER BY {0}", sort);
 
-            sql.AppendFormat(" LIMIT {0} OFFSET {1};", size, skip);
-
-            return sql.ToString();
+            sqlBuilder.AppendFormat(" LIMIT {0} OFFSET {1};", take, skip);
+            return sqlBuilder.ToString();
         }
     }
 }

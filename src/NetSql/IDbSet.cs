@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.SqlQueryable;
+using NetSql.SqlQueryable.Abstract;
 
 namespace NetSql
 {
@@ -115,5 +116,42 @@ namespace NetSql
         /// <param name="commandType">命令类型</param>
         /// <returns></returns>
         Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null, IDbTransaction transaction = null, CommandType? commandType = null);
+
+        #region ==连接查询==
+
+        /// <summary>
+        /// 左连接
+        /// </summary>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <returns></returns>
+        INetSqlQueryable<TEntity, TEntity2> LeftJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : Entity, new();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="onExpression"></param>
+        /// <returns></returns>
+        INetSqlQueryable<TEntity, TEntity2> InnerJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : Entity, new();
+
+        ///// <summary>
+        ///// 左连接
+        ///// </summary>
+        ///// <typeparam name="TEntity2"></typeparam>
+        ///// <typeparam name="TEntity3"></typeparam>
+        ///// <returns></returns>
+        //INetSqlQueryable<TEntity, TEntity2, TEntity3> LeftJoin<TEntity2, TEntity3>() where TEntity2 : Entity, new() where TEntity3 : Entity, new();
+
+        ///// <summary>
+        ///// 左连接
+        ///// </summary>
+        ///// <typeparam name="TEntity2"></typeparam>
+        ///// <typeparam name="TEntity3"></typeparam>
+        ///// <typeparam name="TEntity4"></typeparam>
+        ///// <returns></returns>
+        //INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> LeftJoin<TEntity2, TEntity3, TEntity4>() where TEntity2 : Entity, new() where TEntity3 : Entity, new() where TEntity4 : Entity, new();
+
+        #endregion
+
     }
 }

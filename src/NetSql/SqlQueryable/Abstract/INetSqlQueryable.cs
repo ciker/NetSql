@@ -1,56 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Entities;
 using NetSql.Enums;
-using NetSql.Pagination;
 
-namespace NetSql.SqlQueryable
+namespace NetSql.SqlQueryable.Abstract
 {
     /// <summary>
     /// Sql构造器
     /// </summary>
-    public interface INetSqlQueryable<TEntity> where TEntity : Entity, new()
+    public interface INetSqlQueryable<TEntity> : INetSqlQueryableBase<TEntity, INetSqlQueryable<TEntity>, Expression<Func<TEntity, bool>>> where TEntity : Entity, new()
     {
         /// <summary>
-        /// 过滤
-        /// </summary>
-        /// <param name="expression">过滤条件</param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression);
-
-        /// <summary>
-        /// 过滤
-        /// </summary>
-        /// <param name="isAdd">是否添加</param>
-        /// <param name="expression">条件</param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> WhereIf(bool isAdd, Expression<Func<TEntity, bool>> expression);
-
-        /// <summary>
-        /// 排序
+        /// 升序
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
-        /// <param name="expression">列</param>
-        /// <param name="sortType">排序规则</param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> expression, SortType sortType = SortType.Asc);
+        INetSqlQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> expression);
 
         /// <summary>
-        /// 排序
+        /// 降序
         /// </summary>
-        /// <param name="sort"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity> OrderBy(Sort sort);
-
-        /// <summary>
-        /// 限制
-        /// </summary>
-        /// <param name="skip">跳过前几条数据</param>
-        /// <param name="take">取前几条数据</param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> Limit(int skip, int take);
+        INetSqlQueryable<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> expression);
 
         /// <summary>
         /// 查询指定列
@@ -96,25 +73,14 @@ namespace NetSql.SqlQueryable
         /// 删除
         /// </summary>
         /// <returns></returns>
-        Task<bool> Delete();
+        Task<bool> Delete(IDbTransaction transaction = null);
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        Task<bool> Update(Expression<Func<TEntity, TEntity>> expression);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Task<List<TEntity>> ToList();
-
-        /// <summary>
-        /// 输出Sql语句
-        /// </summary>
-        /// <returns></returns>
-        string ToSql();
+        Task<bool> Update(Expression<Func<TEntity, TEntity>> expression, IDbTransaction transaction = null);
     }
 }

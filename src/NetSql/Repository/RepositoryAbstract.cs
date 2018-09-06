@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NetSql.Entities;
 using NetSql.Pagination;
 using NetSql.SqlQueryable;
+using NetSql.SqlQueryable.Abstract;
 
 namespace NetSql.Repository
 {
@@ -91,7 +92,7 @@ namespace NetSql.Repository
             return PaginationAsync(paging, query, transaction);
         }
 
-        protected async Task<List<TEntity>> PaginationAsync(Paging paging = null, INetSqlQueryable<TEntity> query = null, IDbTransaction transaction = null)
+        protected async Task<List<TEntity>> PaginationAsync(Paging paging, INetSqlQueryable<TEntity> query, IDbTransaction transaction = null)
         {
             if (paging == null)
                 paging = new Paging();
@@ -104,7 +105,7 @@ namespace NetSql.Repository
             //排序
             foreach (var sort in paging.OrderBy)
             {
-                query.OrderBy(sort);
+                query.Order(sort);
             }
 
             var count = query.Count();
@@ -113,6 +114,5 @@ namespace NetSql.Repository
             paging.TotalCount = await count;
             return await list;
         }
-
     }
 }
