@@ -52,12 +52,6 @@ namespace NetSql.SqlQueryable.Abstract
         Task<TResult> Min<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         /// <summary>
-        /// 查询数量
-        /// </summary>
-        /// <returns></returns>
-        Task<long> Count();
-
-        /// <summary>
         /// 判断是否存在
         /// </summary>
         /// <returns></returns>

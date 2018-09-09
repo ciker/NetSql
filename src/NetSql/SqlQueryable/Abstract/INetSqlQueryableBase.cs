@@ -8,11 +8,38 @@ namespace NetSql.SqlQueryable.Abstract
 
     public interface INetSqlQueryableBase<TEntity>
     {
+        /// <summary>
+        /// 查询列表
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
         Task<List<TResult>> ToList<TResult>();
 
+        /// <summary>
+        /// 查询列表
+        /// </summary>
+        /// <returns></returns>
         Task<List<TEntity>> ToList();
 
+        /// <summary>
+        /// 获取Sql语句
+        /// </summary>
+        /// <returns></returns>
         string ToSql();
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="paging"></param>
+        /// <returns></returns>
+        Task<List<TEntity>> Pagination(Paging paging);
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="paging"></param>
+        /// <returns></returns>
+        Task<List<TResult>> Pagination<TResult>(Paging paging);
     }
 
     public interface INetSqlQueryableBase<TEntity, out TType, in TFunc> : INetSqlQueryableBase<TEntity> where TType : INetSqlQueryableBase<TEntity> where TFunc : Expression
@@ -61,5 +88,10 @@ namespace NetSql.SqlQueryable.Abstract
         /// <returns></returns>
         TType Limit(int skip, int take);
 
+        /// <summary>
+        /// 查询数量
+        /// </summary>
+        /// <returns></returns>
+        Task<long> Count();
     }
 }

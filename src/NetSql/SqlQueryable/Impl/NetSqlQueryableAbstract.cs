@@ -61,6 +61,19 @@ namespace NetSql.SqlQueryable.Impl
             return (await Db.QueryAsync<TEntity>(ToSql())).ToList();
         }
 
+        public Task<long> Count()
+        {
+            var sqlBuilder = new StringBuilder();
+
+            ResolveSelect(sqlBuilder, "COUNT(0)");
+
+            ResolveJoin(sqlBuilder);
+
+            ResolveWhere(sqlBuilder);
+
+            return Db.ExecuteScalarAsync<long>(sqlBuilder.ToString());
+        }
+
         public string ToSql()
         {
             //分页查询
@@ -107,6 +120,20 @@ namespace NetSql.SqlQueryable.Impl
             ResolveOrder(sqlBuilder);
 
             return sqlBuilder.ToString();
+        }
+
+        public async Task<List<TEntity>> Pagination(Paging paging)
+        {
+            SetLimit(paging.Skip, paging.Size);
+            paging.TotalCount = await Count();
+            return await ToList();
+        }
+
+        public async Task<List<TResult>> Pagination<TResult>(Paging paging)
+        {
+            SetLimit(paging.Skip, paging.Size);
+            paging.TotalCount = await Count();
+            return await ToList<TResult>();
         }
 
         protected void SetWhere(LambdaExpression wherExpression)

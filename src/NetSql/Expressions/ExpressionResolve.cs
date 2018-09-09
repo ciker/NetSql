@@ -90,7 +90,7 @@ namespace NetSql.Expressions
                             ResolveSelect(sql, p1);
                         }
 
-                        if (i < newExpression.Arguments.Count)
+                        if (i < newExpression.Arguments.Count - 1)
                             sql.Append(",");
                     }
                 }

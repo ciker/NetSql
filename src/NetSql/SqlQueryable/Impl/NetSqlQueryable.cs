@@ -118,20 +118,7 @@ namespace NetSql.SqlQueryable.Impl
             return Db.ExecuteScalarAsync<TResult>(sqlBuilder.ToString());
         }
 
-        public Task<long> Count()
-        {
-            var sqlBuilder = new StringBuilder();
-
-            ResolveSelect(sqlBuilder, "COUNT(0)");
-
-            ResolveJoin(sqlBuilder);
-
-            ResolveWhere(sqlBuilder);
-
-            return Db.ExecuteScalarAsync<long>(sqlBuilder.ToString());
-        }
-
-        public async Task<bool> Exists()
+       public async Task<bool> Exists()
         {
             var sqlBuilder = new StringBuilder();
 

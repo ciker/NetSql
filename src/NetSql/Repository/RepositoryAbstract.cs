@@ -100,19 +100,13 @@ namespace NetSql.Repository
             if (query == null)
                 query = Db.Find();
 
-            query.Limit(paging.Skip, paging.Size);
-
             //排序
             foreach (var sort in paging.OrderBy)
             {
                 query.Order(sort);
             }
 
-            var count = query.Count();
-            var list = query.ToList();
-
-            paging.TotalCount = await count;
-            return await list;
+            return await query.Pagination(paging);
         }
     }
 }
