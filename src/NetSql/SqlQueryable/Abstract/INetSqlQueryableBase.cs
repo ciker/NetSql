@@ -5,7 +5,6 @@ using NetSql.Pagination;
 
 namespace NetSql.SqlQueryable.Abstract
 {
-
     public interface INetSqlQueryableBase<TEntity>
     {
         /// <summary>
@@ -13,13 +12,13 @@ namespace NetSql.SqlQueryable.Abstract
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        Task<List<TResult>> ToList<TResult>();
+        Task<IList<TResult>> ToList<TResult>();
 
         /// <summary>
         /// 查询列表
         /// </summary>
         /// <returns></returns>
-        Task<List<TEntity>> ToList();
+        Task<IList<TEntity>> ToList();
 
         /// <summary>
         /// 获取Sql语句
@@ -32,14 +31,14 @@ namespace NetSql.SqlQueryable.Abstract
         /// </summary>
         /// <param name="paging"></param>
         /// <returns></returns>
-        Task<List<TEntity>> Pagination(Paging paging);
+        Task<IList<TEntity>> Pagination(Paging paging);
 
         /// <summary>
         /// 分页查询
         /// </summary>
         /// <param name="paging"></param>
         /// <returns></returns>
-        Task<List<TResult>> Pagination<TResult>(Paging paging);
+        Task<IList<TResult>> Pagination<TResult>(Paging paging);
     }
 
     public interface INetSqlQueryableBase<TEntity, out TType, in TFunc> : INetSqlQueryableBase<TEntity> where TType : INetSqlQueryableBase<TEntity> where TFunc : Expression

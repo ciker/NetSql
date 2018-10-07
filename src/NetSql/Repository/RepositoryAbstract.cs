@@ -85,14 +85,14 @@ namespace NetSql.Repository
             return Db.Find(where).First();
         }
 
-        public virtual Task<List<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null, IDbTransaction transaction = null)
+        public virtual Task<IList<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null, IDbTransaction transaction = null)
         {
             var query = Db.Find(where);
 
             return PaginationAsync(paging, query, transaction);
         }
 
-        protected async Task<List<TEntity>> PaginationAsync(Paging paging, INetSqlQueryable<TEntity> query, IDbTransaction transaction = null)
+        protected Task<IList<TEntity>> PaginationAsync(Paging paging, INetSqlQueryable<TEntity> query, IDbTransaction transaction = null)
         {
             if (paging == null)
                 paging = new Paging();
@@ -106,7 +106,7 @@ namespace NetSql.Repository
                 query.Order(sort);
             }
 
-            return await query.Pagination(paging);
+            return query.Pagination(paging);
         }
     }
 }

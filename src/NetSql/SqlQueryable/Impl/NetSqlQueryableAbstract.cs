@@ -51,12 +51,12 @@ namespace NetSql.SqlQueryable.Impl
             ExpressionResolve = new ExpressionResolve(sqlAdapter, JoinCollection);
         }
 
-        public async Task<List<TResult>> ToList<TResult>()
+        public async Task<IList<TResult>> ToList<TResult>()
         {
             return (await Db.QueryAsync<TResult>(ToSql())).ToList();
         }
 
-        public async Task<List<TEntity>> ToList()
+        public async Task<IList<TEntity>> ToList()
         {
             return (await Db.QueryAsync<TEntity>(ToSql())).ToList();
         }
@@ -122,14 +122,14 @@ namespace NetSql.SqlQueryable.Impl
             return sqlBuilder.ToString();
         }
 
-        public async Task<List<TEntity>> Pagination(Paging paging)
+        public async Task<IList<TEntity>> Pagination(Paging paging)
         {
             SetLimit(paging.Skip, paging.Size);
             paging.TotalCount = await Count();
             return await ToList();
         }
 
-        public async Task<List<TResult>> Pagination<TResult>(Paging paging)
+        public async Task<IList<TResult>> Pagination<TResult>(Paging paging)
         {
             SetLimit(paging.Skip, paging.Size);
             paging.TotalCount = await Count();

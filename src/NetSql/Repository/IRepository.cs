@@ -77,6 +77,6 @@ namespace NetSql.Repository
         /// <param name="where">过滤条件</param>
         /// <param name="transaction">事务</param>
         /// <returns></returns>
-        Task<List<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null, IDbTransaction transaction = null);
+        Task<IList<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null, IDbTransaction transaction = null);
     }
 }
