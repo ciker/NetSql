@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Text;
+using NetSql.Enums;
 
 namespace NetSql.SqlAdapter
 {
     public abstract class SqlAdapterAbstract : ISqlAdapter
     {
+        public virtual DbType Type => DbType.SqlServer;
+
+        /// <summary>
+        /// 左引号
+        /// </summary>
         public virtual char LeftQuote => '"';
 
         /// <summary>

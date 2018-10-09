@@ -11,6 +11,7 @@ using NetSql.Internal;
 using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable.Abstract;
+using DbType = NetSql.Enums.DbType;
 
 namespace NetSql.SqlQueryable.Impl
 {
@@ -118,7 +119,7 @@ namespace NetSql.SqlQueryable.Impl
             return Db.ExecuteScalarAsync<TResult>(sqlBuilder.ToString());
         }
 
-       public async Task<bool> Exists()
+        public async Task<bool> Exists()
         {
             var sqlBuilder = new StringBuilder();
 
@@ -133,8 +134,20 @@ namespace NetSql.SqlQueryable.Impl
 
         public async Task<TEntity> First()
         {
-            SetLimit(0, 1);
+            var sqlBuilder = new StringBuilder();
 
+            if (SqlAdapter.Type == DbType.SqlServer)
+            {
+                ResolveSelect(sqlBuilder, " TOP 1 *");
+
+                ResolveJoin(sqlBuilder);
+
+                ResolveWhere(sqlBuilder);
+
+                return await Db.QueryFirstOrDefaultAsync<TEntity>(sqlBuilder.ToString());
+            }
+
+            SetLimit(0, 1);
             return (await ToList()).FirstOrDefault();
         }
 

@@ -1,10 +1,12 @@
 ﻿using System.Text;
+using NetSql.Enums;
 using NetSql.Internal;
 
 namespace NetSql.SqlAdapter
 {
     public class SqlServerAdapter : SqlAdapterAbstract
     {
+
         /// <summary>
         /// 左引号
         /// </summary>

@@ -24,8 +24,5 @@ namespace NetSql.Test.Common.Model
         public int TagID { get; set; }
 
         public int CateID { get; set; }
-
-        public int CommitID { get; set; }
-
     }
 }

@@ -86,12 +86,12 @@ namespace NetSql.SqlQueryable.Impl
 
                 #region ==SqlServer分页需要指定排序==
 
-                if (sort.IsNull() && SqlAdapter.GetType().Name.Equals("SqlServerAdapter"))
+                if (SqlAdapter.Type == DbType.SqlServer && sort.IsNull())
                 {
                     var first = JoinCollection.First();
                     if (first.EntityDescriptor.PrimaryKeyType == PrimaryKeyType.NoPrimaryKey)
                     {
-                        throw new ArgumentNullException("OrderBy", "没有主键的表需要指定排序字段才可以分页查询");
+                        throw new ArgumentNullException("OrderBy", "SqlServer数据库没有主键的表需要指定排序字段才可以分页查询");
                     }
 
                     if (JoinCollection.Count > 1)

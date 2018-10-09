@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using NetSql.Enums;
 using NetSql.Internal;
 using NetSql.SqlAdapter;
 
@@ -6,6 +7,8 @@ namespace NetSql.MySql
 {
     internal class MySqlAdapter : SqlAdapterAbstract
     {
+        public override DbType Type => DbType.MySql;
+
         /// <summary>
         /// 左引号
         /// </summary>

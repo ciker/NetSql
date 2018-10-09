@@ -1,10 +1,16 @@
 ﻿using System.Text;
+using NetSql.Enums;
 
 namespace NetSql.SqlAdapter
 {
     public interface ISqlAdapter
     {
         #region ==属性==
+
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        DbType Type { get; }
 
         /// <summary>
         /// 左引号

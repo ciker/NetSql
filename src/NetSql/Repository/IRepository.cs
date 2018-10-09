@@ -71,6 +71,13 @@ namespace NetSql.Repository
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null);
 
         /// <summary>
+        /// 查询全部
+        /// </summary>
+        /// <param name="transaction">事务</param>
+        /// <returns></returns>
+        Task<IList<TEntity>> GetAllAsync(IDbTransaction transaction = null);
+
+        /// <summary>
         /// 分页查询
         /// </summary>
         /// <param name="paging">分页</param>

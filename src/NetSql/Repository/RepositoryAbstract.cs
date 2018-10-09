@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Entities;
 using NetSql.Pagination;
-using NetSql.SqlQueryable;
 using NetSql.SqlQueryable.Abstract;
 
 namespace NetSql.Repository
@@ -39,29 +38,32 @@ namespace NetSql.Repository
             return Db.InsertAsync(entity, transaction);
         }
 
-        public virtual Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null)
+        public virtual async Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null)
         {
             if (list == null || !list.Any())
-                return Task.FromResult(false);
+                return false;
 
             if (transaction == null)
                 transaction = DbContext.BeginTransaction();
-
             try
             {
-                foreach (var enitty in list)
+                foreach (var entity in list)
                 {
-                    AddAsync(enitty, transaction);
+                   await AddAsync(entity, transaction);
                 }
 
                 transaction.Commit();
-                return Task.FromResult(true);
+                return true;
+
             }
             catch
             {
                 transaction.Rollback();
-                transaction.Connection.Close();
                 throw;
+            }
+            finally
+            {
+                transaction.Connection?.Close();
             }
         }
 
@@ -83,6 +85,11 @@ namespace NetSql.Repository
         public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> @where, IDbTransaction transaction = null)
         {
             return Db.Find(where).First();
+        }
+
+        public Task<IList<TEntity>> GetAllAsync(IDbTransaction transaction = null)
+        {
+            return Db.Find().ToList();
         }
 
         public virtual Task<IList<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null, IDbTransaction transaction = null)

@@ -40,7 +40,7 @@ namespace NetSql.MySql.Test
         }
 
         [Fact]
-        public void BatchInsertTest()
+        public async void BatchInsertTest()
         {
             var list = new List<Article>();
             for (var i = 0; i < 10000; i++)
@@ -52,14 +52,16 @@ namespace NetSql.MySql.Test
                     Body = "这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章",
                     ReadCount = 10,
                     IsDeleted = i % 2 == 0,
-                    CreatedTime = DateTime.Now
+                    CreatedTime = DateTime.Now,
+                    TagID = i % 6,
+                    CateID = i % 8
                 };
                 list.Add(article);
             }
             var sw = new Stopwatch();
             sw.Start();
 
-            _repository.AddAsync(list);
+            await _repository.AddAsync(list);
 
             sw.Stop();
             var s = sw.ElapsedMilliseconds;
