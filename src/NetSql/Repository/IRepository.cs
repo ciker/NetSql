@@ -33,10 +33,11 @@ namespace NetSql.Repository
         /// <summary>
         /// 批量新增
         /// </summary>
-        /// <param name="list"></param>
-        /// <param name="transaction"></param>
+        /// <param name="list">实体集合</param>
+        /// <param name="transaction">事务</param>
+        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
         /// <returns></returns>
-        Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null);
+        Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null, int flushSize = 2048);
 
         /// <summary>
         /// 删除

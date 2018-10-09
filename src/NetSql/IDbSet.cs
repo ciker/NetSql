@@ -32,6 +32,15 @@ namespace NetSql
         Task<bool> InsertAsync(TEntity entity, IDbTransaction transaction = null);
 
         /// <summary>
+        /// 批量插入
+        /// </summary>
+        /// <param name="entityList">实体集合</param>
+        /// <param name="transaction"></param>
+        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
+        /// <returns></returns>
+        Task<bool> BatchInsertAsync(List<TEntity> entityList, IDbTransaction transaction = null, int flushSize = 2048);
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="id"></param>

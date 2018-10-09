@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 using NetSql.Entities;
 using NetSql.Pagination;
@@ -38,33 +39,9 @@ namespace NetSql.Repository
             return Db.InsertAsync(entity, transaction);
         }
 
-        public virtual async Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null)
+        public virtual Task<bool> AddAsync(List<TEntity> list, IDbTransaction transaction = null, int flushSize = 0)
         {
-            if (list == null || !list.Any())
-                return false;
-
-            if (transaction == null)
-                transaction = DbContext.BeginTransaction();
-            try
-            {
-                foreach (var entity in list)
-                {
-                   await AddAsync(entity, transaction);
-                }
-
-                transaction.Commit();
-                return true;
-
-            }
-            catch
-            {
-                transaction.Rollback();
-                throw;
-            }
-            finally
-            {
-                transaction.Connection?.Close();
-            }
+            return Db.BatchInsertAsync(list, transaction, flushSize);
         }
 
         public virtual Task<bool> DeleteAsync(dynamic id, IDbTransaction transaction = null)

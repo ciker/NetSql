@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using NetSql.Entities;
@@ -70,6 +72,68 @@ namespace NetSql
             }
 
             return false;
+        }
+
+        public async Task<bool> BatchInsertAsync(List<TEntity> entityList, IDbTransaction transaction = null, int flushSize = 2048)
+        {
+            if (entityList == null || !entityList.Any())
+                return false;
+
+            try
+            {
+                if (transaction == null)
+                    transaction = _context.BeginTransaction();
+
+                if (_context.Options.SqlAdapter.Type == Enums.DbType.SqlServer)
+                {
+                    if (flushSize < 1)
+                        flushSize = 2048;
+
+                    var sqlBuilder = new StringBuilder(_sqlStatement.BatchInsert);
+                    for (var t = 0; t < entityList.Count; t++)
+                    {
+                        var entity = entityList[t];
+                        sqlBuilder.Append("(");
+                        for (var i = 0; i < _sqlStatement.BatchInsertColumnList.Count; i++)
+                        {
+                            var col = _sqlStatement.BatchInsertColumnList[i];
+                            var value = col.PropertyInfo.GetValue(entity);
+                            var type = col.PropertyType;
+
+                            if (type == typeof(DateTime) || type == typeof(string) || type == typeof(char))
+                                sqlBuilder.AppendFormat("'{0}'", value);
+                            else if (type.IsEnum)
+                                sqlBuilder.AppendFormat("{0}", value.ToInt());
+                            else
+                                sqlBuilder.AppendFormat("{0}", value);
+
+                            if (i < _sqlStatement.BatchInsertColumnList.Count - 1)
+                                sqlBuilder.Append(",");
+                        }
+
+                        sqlBuilder.Append(")");
+                        if (t < entityList.Count - 1)
+                            sqlBuilder.Append(",");
+
+                    }
+                    sqlBuilder.Append(";");
+
+                   await ExecuteAsync(sqlBuilder.ToString(), null, transaction);
+                }
+
+                transaction.Commit();
+                return true;
+
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                transaction.Connection?.Close();
+            }
         }
 
         public async Task<bool> DeleteAsync(dynamic id, IDbTransaction transaction = null)

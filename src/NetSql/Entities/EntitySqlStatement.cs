@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NetSql.Enums;
 using NetSql.SqlAdapter;
@@ -25,6 +26,16 @@ namespace NetSql.Entities
         /// 插入语句
         /// </summary>
         public string Insert { get; private set; }
+
+        /// <summary>
+        /// 批量插入语句
+        /// </summary>
+        public string BatchInsert { get; private set; }
+
+        /// <summary>
+        /// 批量插入列集合
+        /// </summary>
+        public List<ColumnDescriptor> BatchInsertColumnList { get; } = new List<ColumnDescriptor>();
 
         /// <summary>
         /// 删除单条语句
@@ -68,7 +79,7 @@ namespace NetSql.Entities
             _sqlAdapter.AppendQuote(sb, _descriptor.TableName);
             sb.Append("(");
 
-            var valuesSql = new StringBuilder(") VALUES(");
+            var valuesSql = new StringBuilder();
 
             foreach (var col in _descriptor.Columns)
             {
@@ -81,16 +92,23 @@ namespace NetSql.Entities
 
                 _sqlAdapter.AppendParameter(valuesSql, col.PropertyInfo.Name);
                 valuesSql.Append(",");
+
+                BatchInsertColumnList.Add(col);
             }
 
             //删除最后一个","
             sb.Remove(sb.Length - 1, 1);
 
+            sb.Append(") VALUES");
+
+            BatchInsert = sb.ToString();
+
+            sb.Append("(");
+
             //删除最后一个","
             valuesSql.Remove(valuesSql.Length - 1, 1);
-            valuesSql.Append(");");
-
             sb.Append(valuesSql);
+            sb.Append(");");
 
             Insert = sb.ToString();
         }
