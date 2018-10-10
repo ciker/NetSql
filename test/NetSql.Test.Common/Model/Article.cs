@@ -6,6 +6,10 @@ namespace NetSql.Test.Common.Model
 {
     public class Article : EntityBase
     {
+        public int UserId { get; set; }
+
+        public int CateId { get; set; }
+
         [Column("Title")]
         public string Title1 { get; set; }
 
@@ -19,10 +23,5 @@ namespace NetSql.Test.Common.Model
 
         public DateTime CreatedTime { get; set; }
 
-        public int UserID { get; set; }
-
-        public int TagID { get; set; }
-
-        public int CateID { get; set; }
     }
 }

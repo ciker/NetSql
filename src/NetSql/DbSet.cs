@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dapper;
 using NetSql.Entities;
 using NetSql.Enums;
+using NetSql.Expressions;
 using NetSql.Internal;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable;
@@ -84,55 +85,53 @@ namespace NetSql
                 if (transaction == null)
                     transaction = _context.BeginTransaction();
 
-                if (_context.Options.SqlAdapter.Type == Enums.DbType.SqlServer)
+                var sqlBuilder = new StringBuilder();
+
+                for (var t = 0; t < entityList.Count; t++)
                 {
-                    if (flushSize < 1)
-                        flushSize = 2048;
-
-                    var sqlBuilder = new StringBuilder(_sqlStatement.BatchInsert);
-                    for (var t = 0; t < entityList.Count; t++)
+                    var mod = (t + 1) % 1000;
+                    if (mod == 1)
                     {
-                        var entity = entityList[t];
-                        sqlBuilder.Append("(");
-                        for (var i = 0; i < _sqlStatement.BatchInsertColumnList.Count; i++)
-                        {
-                            var col = _sqlStatement.BatchInsertColumnList[i];
-                            var value = col.PropertyInfo.GetValue(entity);
-                            var type = col.PropertyType;
-
-                            if (type == typeof(DateTime) || type == typeof(string) || type == typeof(char))
-                                sqlBuilder.AppendFormat("'{0}'", value);
-                            else if (type.IsEnum)
-                                sqlBuilder.AppendFormat("{0}", value.ToInt());
-                            else
-                                sqlBuilder.AppendFormat("{0}", value);
-
-                            if (i < _sqlStatement.BatchInsertColumnList.Count - 1)
-                                sqlBuilder.Append(",");
-                        }
-
-                        sqlBuilder.Append(")");
-                        if (t < entityList.Count - 1)
-                            sqlBuilder.Append(",");
-
+                        sqlBuilder.Clear();
+                        sqlBuilder.Append(_sqlStatement.BatchInsert);
                     }
-                    sqlBuilder.Append(";");
 
-                   await ExecuteAsync(sqlBuilder.ToString(), null, transaction);
+                    var entity = entityList[t];
+                    sqlBuilder.Append("(");
+                    for (var i = 0; i < _sqlStatement.BatchInsertColumnList.Count; i++)
+                    {
+                        var col = _sqlStatement.BatchInsertColumnList[i];
+                        var value = col.PropertyInfo.GetValue(entity);
+                        var type = col.PropertyType;
+
+                        ExpressionResolve.AppendValue(sqlBuilder, type, value);
+
+                        if (i < _sqlStatement.BatchInsertColumnList.Count - 1)
+                            sqlBuilder.Append(",");
+                    }
+
+                    sqlBuilder.Append(")");
+
+                    if (mod > 0 && t < entityList.Count - 1)
+                        sqlBuilder.Append(",");
+                    else if (mod == 0 || t == entityList.Count - 1)
+                    {
+                        sqlBuilder.Append(";");
+                        await ExecuteAsync(sqlBuilder.ToString(), null, transaction);
+                    }
                 }
 
                 transaction.Commit();
                 return true;
-
             }
             catch
             {
-                transaction.Rollback();
+                transaction?.Rollback();
                 throw;
             }
             finally
             {
-                transaction.Connection?.Close();
+                transaction?.Connection?.Close();
             }
         }
 

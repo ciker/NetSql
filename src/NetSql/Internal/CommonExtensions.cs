@@ -47,13 +47,18 @@ namespace NetSql.Internal
         {
             if (s == null || s == DBNull.Value)
                 return 0;
+
             if (s.GetType().IsEnum)
             {
                 return (int) s;
             }
 
-            if (Int32.TryParse(s.ToString(), out int result))
+            if (s is bool b)
+                return b ? 1 : 0;
+
+            if (int.TryParse(s.ToString(), out int result))
                 return result;
+
             var f = s.ToFloat();
             return round ? Convert.ToInt32(f) : (int)f;
         }

@@ -20,7 +20,6 @@ namespace NetSql.Expressions
 
         private bool IsJoin => _joinCollection.Count > 1;
 
-
         public ExpressionResolve(ISqlAdapter sqlAdapter, JoinCollection joinCollection)
         {
             _sqlAdapter = sqlAdapter;
@@ -295,14 +294,7 @@ namespace NetSql.Expressions
             if (exp == null || !(exp is ConstantExpression constantExp))
                 return;
 
-            if (exp.Type == typeof(string))
-                sqlBuilder.AppendFormat("'{0}'", constantExp.Value);
-            else if (exp.Type == typeof(bool))
-                sqlBuilder.AppendFormat("{0}", constantExp.Value.ToBool().ToIntString());
-            else if (exp.Type.IsEnum)
-                sqlBuilder.AppendFormat("{0}", constantExp.Value.ToInt());
-            else
-                sqlBuilder.Append(constantExp.Value);
+            AppendValue(sqlBuilder, exp.Type, constantExp.Value);
         }
 
         private void MemberAccessResolve(Expression exp, StringBuilder sqlBuilder)
@@ -333,12 +325,7 @@ namespace NetSql.Expressions
         {
             var value = DynamicInvoke(exp);
 
-            if (exp.Type == typeof(DateTime) || exp.Type == typeof(string) || exp.Type == typeof(char))
-                sqlBuilder.AppendFormat("'{0}'", value);
-            else if (exp.Type.IsEnum)
-                sqlBuilder.AppendFormat("{0}", value.ToInt());
-            else
-                sqlBuilder.AppendFormat("{0}", value);
+            AppendValue(sqlBuilder, exp.Type, value);
         }
 
         private void CallResolve(Expression exp, StringBuilder sqlBuilder)
@@ -751,20 +738,6 @@ namespace NetSql.Expressions
             return Expression.Lambda(exp).Compile().DynamicInvoke();
         }
 
-        /// <summary>
-        /// 附加列
-        /// </summary>
-        /// <param name="sqlBuilder"></param>
-        /// <param name="kv"></param>
-        /// <param name="col"></param>
-        private void AppendFormatColumn(StringBuilder sqlBuilder, KeyValuePair<string, IEntityDescriptor> kv, ColumnDescriptor col)
-        {
-            if (IsJoin)
-                sqlBuilder.AppendFormat("{0}.{1}", _sqlAdapter.AppendQuote(kv.Key), _sqlAdapter.AppendQuote(col.Name));
-            else
-                sqlBuilder.Append(_sqlAdapter.AppendQuote(col.Name));
-        }
-
         #endregion
 
         #region ==附加列==
@@ -776,12 +749,29 @@ namespace NetSql.Expressions
 
         private void AppendColum(StringBuilder sqlBuilder, JoinDescriptor descriptor, ColumnDescriptor col)
         {
-            if (IsJoin)
-                sqlBuilder.Append($"{_sqlAdapter.AppendQuote(descriptor.Alias)}.{_sqlAdapter.AppendQuote(col.Name)}");
-            else
-                sqlBuilder.Append($"{_sqlAdapter.AppendQuote(col.Name)}");
+            sqlBuilder.Append(IsJoin
+                ? $"{_sqlAdapter.AppendQuote(descriptor.Alias)}.{_sqlAdapter.AppendQuote(col.Name)}"
+                : $"{_sqlAdapter.AppendQuote(col.Name)}");
         }
 
         #endregion
+
+        /// <summary>
+        /// 附加值
+        /// </summary>
+        /// <param name="sqlBuilder"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        public static void AppendValue(StringBuilder sqlBuilder, Type type, object value)
+        {
+            if (type.IsEnum || type == typeof(bool))
+                sqlBuilder.AppendFormat("{0}", value.ToInt());
+            else if (type == typeof(string) || type == typeof(char))
+                sqlBuilder.AppendFormat("'{0}'", value);
+            else if (type == typeof(DateTime))
+                sqlBuilder.AppendFormat("'{0:yyyy-MM-dd HH:mm:ss}'", value.ToDateTime());
+            else
+                sqlBuilder.AppendFormat("{0}", value);
+        }
     }
 }

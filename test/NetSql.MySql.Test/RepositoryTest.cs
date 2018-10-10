@@ -42,19 +42,25 @@ namespace NetSql.MySql.Test
         [Fact]
         public async void BatchInsertTest()
         {
+            try
+            {
+                AddTest();
+            }
+            catch (Exception e)
+            {
+            }
             var list = new List<Article>();
-            for (var i = 0; i < 10000; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var article = new Article
                 {
+                    CateId = i % 8,
                     Title1 = "test" + i,
                     Summary = "这是一篇测试文章",
                     Body = "这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章这是一篇测试文章",
                     ReadCount = 10,
                     IsDeleted = i % 2 == 0,
                     CreatedTime = DateTime.Now,
-                    TagID = i % 6,
-                    CateID = i % 8
                 };
                 list.Add(article);
             }

@@ -65,7 +65,7 @@ namespace NetSql.MySql.Test
                     ReadCount = 10,
                     IsDeleted = i % 2 == 0,
                     CreatedTime = DateTime.Now,
-                    UserID = i % 2 + 1
+                    UserId = i % 2 + 1
                 };
 
                 await _dbArticle.InsertAsync(article, tran);
@@ -270,18 +270,14 @@ namespace NetSql.MySql.Test
             sw.Start();
             for (var i = 0; i < 10000; i++)
             {
-                var query = _dbArticle.InnerJoin<User>((m, n) => m.UserID == n.Id)
-                    .LeftJoin<Tag>((t1, t2, t3) => t1.TagID == t3.Id)
-                    .LeftJoin<Category>((t1, t2, t3, t4) => t1.CateID == t4.Id)
-                    .LeftJoin<Commit>((t1, t2, t3, t4, t5) => t1.CateID == t5.Id)
-                    .Select((t1, t2, t3, t4, t5) => new
+                var query = _dbArticle.InnerJoin<User>((m, n) => m.UserId == n.Id)
+                    .LeftJoin<Category>((t1, t2, t3) => t1.CateId == t3.Id)
+                    .Select((t1, t2, t3) => new
                     {
                         t1.Id,
                         t1.Title1,
                         UserName = t2.Name,
-                        TagName = t3.Name,
-                        CateName = t4.Name,
-                        CommitContent = t5.Content
+                        TagName = t3.Name
                     });
 
                 var sql = query.ToSql();

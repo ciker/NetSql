@@ -10,10 +10,7 @@ namespace NetSql.Test.Common
 
         public IDbSet<Article> Articles { get; set; }
         public IDbSet<User> User { get; set; }
-        public IDbSet<Tag> Tag { get; set; }
 
         public IDbSet<Category> Category { get; set; }
-
-        public IDbSet<Commit> Commit { get; set; }
     }
 }
