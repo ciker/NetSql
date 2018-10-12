@@ -586,4 +586,18 @@ public async void PaginationTest()
 }
 ```
 
-# 未完待续~
+# 表连接查询
+
+目前最多支持 5 张表
+
+```csharp
+  var query = _dbArticle.InnerJoin<User>((m, n) => m.UserId == n.Id)
+                    .LeftJoin<Category>((t1, t2, t3) => t1.CateId == t3.Id)
+                    .Select((t1, t2, t3) => new
+                    {
+                        t1.Id,
+                        t1.Title1,
+                        UserName = t2.Name,
+                        TagName = t3.Name
+                    });
+```

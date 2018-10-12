@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using NetSql;
+﻿using NetSql;
 using NetSql.Repository;
 
 namespace Microsoft.Extensions.DependencyInjection
