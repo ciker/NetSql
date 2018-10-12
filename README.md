@@ -8,6 +8,8 @@
 
 ```csharp
 Install-Package NetSql
+Install-Package NetSql.MySql #mysql
+Install-Package NetSql.SQLite #SQLite
 ```
 
 ## 2.2、创建实体
