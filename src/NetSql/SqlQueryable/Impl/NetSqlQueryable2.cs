@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NetSql.Entities;
-using NetSql.Enums;
-using NetSql.Internal;
-using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable.Abstract;
+using Oldli.Fw.Utils;
+using Oldli.Fw.Utils.Enums;
+using Oldli.Fw.Utils.Pagination;
 
 namespace NetSql.SqlQueryable.Impl
 {

@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Entities;
-using NetSql.Pagination;
+using Oldli.Fw.Utils.Pagination;
 
 namespace NetSql.Repository
 {

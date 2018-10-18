@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using NetSql.SqlQueryable;
 using NetSql.SqlQueryable.Abstract;
 
 namespace NetSql

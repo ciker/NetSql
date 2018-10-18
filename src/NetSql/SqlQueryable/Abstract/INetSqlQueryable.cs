@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Entities;
-using NetSql.Enums;
 
 namespace NetSql.SqlQueryable.Abstract
 {

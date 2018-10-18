@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using NetSql.Entities;
-using NetSql.Enums;
-using NetSql.Internal;
-using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable.Abstract;
+using Oldli.Fw.Utils;
+using Oldli.Fw.Utils.Enums;
+using Oldli.Fw.Utils.Pagination;
 using DbType = NetSql.Enums.DbType;
 
 namespace NetSql.SqlQueryable.Impl

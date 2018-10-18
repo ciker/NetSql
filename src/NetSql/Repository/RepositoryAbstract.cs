@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using NetSql.Entities;
-using NetSql.Pagination;
 using NetSql.SqlQueryable.Abstract;
+using Oldli.Fw.Utils.Pagination;
 
 namespace NetSql.Repository
 {

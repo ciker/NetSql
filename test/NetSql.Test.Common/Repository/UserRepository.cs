@@ -8,7 +8,7 @@ namespace NetSql.Test.Common.Repository
 {
     public class UserRepository : RepositoryAbstract<User>, IUserRepository
     {
-        public UserRepository(IDbContext dbContext) : base(dbContext)
+        public UserRepository(BlogDbContext dbContext) : base(dbContext)
         {
         }
     }

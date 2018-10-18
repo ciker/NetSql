@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using NetSql.Entities;
-using NetSql.Enums;
-using NetSql.Internal;
-using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable;
+using Oldli.Fw.Utils.Enums;
+using Oldli.Fw.Utils.Extensions;
+using Oldli.Fw.Utils.Pagination;
 
 namespace NetSql.Expressions
 {

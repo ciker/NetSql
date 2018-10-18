@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using NetSql.Internal;
 using NetSql.SqlAdapter;
+using Oldli.Fw.Utils;
 using DbType = NetSql.Enums.DbType;
 
 namespace NetSql

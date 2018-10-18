@@ -5,7 +5,7 @@ namespace NetSql.Test.Common.Repository
 {
     public class ArticleRepository : RepositoryAbstract<Article>, IArticleRepository
     {
-        public ArticleRepository(IDbContext dbContext) : base(dbContext)
+        public ArticleRepository(BlogDbContext dbContext) : base(dbContext)
         {
         }
     }

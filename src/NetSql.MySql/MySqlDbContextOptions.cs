@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using MySql.Data.MySqlClient;
-using NetSql.Internal;
 using NetSql.SqlAdapter;
+using Oldli.Fw.Utils;
 using DbType = NetSql.Enums.DbType;
 
 namespace NetSql.MySql

@@ -4,7 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using NetSql.Entities;
-using NetSql.Internal;
+using Oldli.Fw.Utils;
+using Oldli.Fw.Utils.Extensions;
 
 namespace NetSql
 {
@@ -43,7 +44,6 @@ namespace NetSql
             Check.NotNull(options.ConnectionString, nameof(options.ConnectionString), "数据库连接字符串为空");
 
             Options = options;
-
             InitializeSets();
         }
 
