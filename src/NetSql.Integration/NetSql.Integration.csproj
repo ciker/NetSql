@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.4.0</Version>
-    <Description>基于Dapper的轻量级ORM框架</Description>
+    <Description>NetSql的集成扩展</Description>
     <PackageProjectUrl>https://github.com/iamoldli/NetSql</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iamoldli/NetSql</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
