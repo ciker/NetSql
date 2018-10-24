@@ -72,8 +72,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             break;
                     }
 
-                    var dbContextOptionsType =
-                        AssemblyHelper.GetTypeFromAssembly(dbContextOptionsAssemblyName, dbContextOptionsTypeName);
+                    var dbContextOptionsType = AssemblyHelper.GetTypeFromAssembly(dbContextOptionsAssemblyName, dbContextOptionsTypeName);
 
                     services.AddSingleton(type, Activator.CreateInstance(type, Activator.CreateInstance(dbContextOptionsType, options.ConnString)));
                 }
