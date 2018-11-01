@@ -9,11 +9,11 @@ using Dapper;
 using NetSql.Entities;
 using NetSql.Enums;
 using NetSql.Expressions;
+using NetSql.Internal;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable;
 using NetSql.SqlQueryable.Abstract;
 using NetSql.SqlQueryable.Impl;
-using Oldli.Fw.Utils;
 
 namespace NetSql
 {

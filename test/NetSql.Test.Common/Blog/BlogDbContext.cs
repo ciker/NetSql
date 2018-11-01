@@ -1,6 +1,6 @@
-﻿using NetSql.Test.Common.Model;
+﻿using NetSql.Test.Common.Blog.Model;
 
-namespace NetSql.Test.Common
+namespace NetSql.Test.Common.Blog
 {
     public class BlogDbContext : DbContext
     {
@@ -9,6 +9,7 @@ namespace NetSql.Test.Common
         }
 
         public IDbSet<Article> Articles { get; set; }
+
         public IDbSet<User> User { get; set; }
 
         public IDbSet<Category> Category { get; set; }

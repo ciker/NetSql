@@ -1,13 +1,13 @@
 ﻿using System.Text;
 using NetSql.Enums;
+using NetSql.Internal;
 using NetSql.SqlAdapter;
-using Oldli.Fw.Utils.Extensions;
 
 namespace NetSql.SQLite
 {
     internal class SQLiteAdapter : SqlAdapterAbstract
     {
-        public override DbType Type => DbType.SQLite;
+        public override DatabaseType Type => DatabaseType.SQLite;
 
         /// <summary>
         /// 左引号

@@ -5,12 +5,12 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using NetSql.Entities;
+using NetSql.Enums;
+using NetSql.Internal;
+using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable.Abstract;
-using Oldli.Fw.Utils;
-using Oldli.Fw.Utils.Enums;
-using Oldli.Fw.Utils.Pagination;
-using DbType = NetSql.Enums.DbType;
+using DatabaseType = NetSql.Enums.DatabaseType;
 
 namespace NetSql.SqlQueryable.Impl
 {
@@ -135,7 +135,7 @@ namespace NetSql.SqlQueryable.Impl
         {
             var sqlBuilder = new StringBuilder();
 
-            if (SqlAdapter.Type == DbType.SqlServer)
+            if (SqlAdapter.Type == DatabaseType.SqlServer)
             {
                 ResolveSelect(sqlBuilder, " TOP 1 *");
 

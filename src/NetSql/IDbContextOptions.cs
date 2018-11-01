@@ -1,6 +1,6 @@
 ﻿using System.Data;
+using NetSql.Enums;
 using NetSql.SqlAdapter;
-using DbType = NetSql.Enums.DbType;
 
 namespace NetSql
 {
@@ -28,6 +28,6 @@ namespace NetSql
         /// <summary>
         /// 数据库类型
         /// </summary>
-        DbType DbType { get; }
+        DatabaseType DbType { get; }
     }
 }

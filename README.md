@@ -1,7 +1,6 @@
 # 1、说明
 
 本项目是一个基于 Dapper 的轻量级 ORM 框架，支持多表连接查询。
-该项目目前依赖于[https://github.com/iamoldli/Fw](https://github.com/iamoldli/Fw) Utils 库
 
 # 2、使用方法
 

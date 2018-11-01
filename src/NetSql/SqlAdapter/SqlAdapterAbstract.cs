@@ -6,7 +6,7 @@ namespace NetSql.SqlAdapter
 {
     public abstract class SqlAdapterAbstract : ISqlAdapter
     {
-        public virtual DbType Type => DbType.SqlServer;
+        public virtual DatabaseType Type => DatabaseType.SqlServer;
 
         /// <summary>
         /// 左引号

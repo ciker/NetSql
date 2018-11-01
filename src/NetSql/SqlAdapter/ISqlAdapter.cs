@@ -10,7 +10,7 @@ namespace NetSql.SqlAdapter
         /// <summary>
         /// 数据库类型
         /// </summary>
-        DbType Type { get; }
+        DatabaseType Type { get; }
 
         /// <summary>
         /// 左引号

@@ -4,8 +4,9 @@ using System.Diagnostics;
 using NetSql.Pagination;
 using NetSql.SQLite;
 using NetSql.Test.Common;
-using NetSql.Test.Common.Model;
-using NetSql.Test.Common.Repository;
+using NetSql.Test.Common.Blog;
+using NetSql.Test.Common.Blog.Model;
+using NetSql.Test.Common.Blog.Repository;
 using Xunit;
 
 namespace NetSql.MySql.Test
@@ -16,8 +17,7 @@ namespace NetSql.MySql.Test
 
         public RepositoryTest()
         {
-            //var dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
-            var dbContext = new BlogDbContext(new DbContextOptions("Server=.;Initial Catalog=NetSqlTest;User ID=sa;Password=oldli!@#123"));
+            var dbContext = new BlogDbContext(new MySqlDbContextOptions("Server=localhost;Database=blog;Uid=root;Pwd=oldli!@#123;Allow User Variables=True;charset=utf8;"));
             _repository = new ArticleRepository(dbContext);
         }
 

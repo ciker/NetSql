@@ -2,8 +2,9 @@
 using NetSql.Entities;
 using NetSql.Mapper;
 
-namespace NetSql.Test.Common.Model
+namespace NetSql.Test.Common.Blog.Model
 {
+    [Table("b_article")]
     public class Article : EntityBase
     {
         public int UserId { get; set; }

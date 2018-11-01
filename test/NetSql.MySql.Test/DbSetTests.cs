@@ -4,7 +4,8 @@ using System.Linq;
 using NetSql.Enums;
 using NetSql.SQLite;
 using NetSql.Test.Common;
-using NetSql.Test.Common.Model;
+using NetSql.Test.Common.Blog;
+using NetSql.Test.Common.Blog.Model;
 using Xunit;
 
 namespace NetSql.MySql.Test
@@ -17,13 +18,12 @@ namespace NetSql.MySql.Test
 
         public DbSetTests()
         {
-            //_dbContext = new BlogDbContext(new SQLiteDbContextOptions("Filename=./Database/Test.db"));
-            _dbContext = new BlogDbContext(new DbContextOptions("Server=.;Initial Catalog=NetSqlTest;User ID=sa;Password=oldli!@#123"));
+            _dbContext = new BlogDbContext(new MySqlDbContextOptions("Server=localhost;Database=blog;Uid=root;Pwd=oldli!@#123;Allow User Variables=True;charset=utf8;"));
             _dbArticle = _dbContext.Set<Article>();
             _dbUser = _dbContext.Set<User>();
 
             //预热
-            //_dbArticle.Find().First();
+            _dbArticle.Find().First();
         }
 
         [Fact]

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NetSql.Repository;
-using NetSql.Test.Common.Model;
+﻿using NetSql.Repository;
+using NetSql.Test.Common.Blog.Model;
 
-namespace NetSql.Test.Common.Repository
+namespace NetSql.Test.Common.Blog.Repository
 {
     public class UserRepository : RepositoryAbstract<User>, IUserRepository
     {

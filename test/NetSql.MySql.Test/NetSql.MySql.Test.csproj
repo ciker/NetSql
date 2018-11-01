@@ -18,14 +18,4 @@
     <ProjectReference Include="..\NetSql.Test.Common\NetSql.Test.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Database\Test.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

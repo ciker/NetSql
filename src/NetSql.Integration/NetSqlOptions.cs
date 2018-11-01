@@ -6,7 +6,7 @@ namespace NetSql.Integration
     {
         public string Name { get; set; }
 
-        public DbType DbType { get; set; }
+        public DatabaseType DbType { get; set; }
 
         public string ConnString { get; set; }
     }

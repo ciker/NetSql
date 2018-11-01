@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyModel;
 using NetSql;
 using NetSql.Enums;
 using NetSql.Integration;
 using NetSql.Repository;
-using Oldli.Fw.Utils;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,8 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            //获取除系统程序集、Nuget包以外的所有程序及
-            var assemblies = AssemblyHelper.GetAssembliesWithImplement(typeof(IRepository<>));
+            //获取除系统程序集、Nuget包以外的所有程序集
+            var assemblies = DependencyContext.Default.CompileLibraries.Where(m => !m.Serviceable && m.Type == "project").Select(m => AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(m.Name))).ToList();
 
             foreach (var assembly in assemblies)
             {
@@ -27,13 +30,13 @@ namespace Microsoft.Extensions.DependencyInjection
                     var interfaces = type.GetInterfaces();
                     foreach (var interfaceType in interfaces)
                     {
-                        if (interfaceType == typeof(IDbContext))
+                        if (interfaceType == typeof(IDbContext) && type != typeof(DbContext))
                         {
                             services.AddDbContext(type);
                         }
                         else if (!interfaceType.IsGenericType && interfaceType.GetInterfaces().Any(m => m.IsGenericType && m.GetGenericTypeDefinition() == typeof(IRepository<>)))
                         {
-                            services.Add(new ServiceDescriptor(interfaceType, type, ServiceLifetime.Singleton));
+                            services.TryAdd(new ServiceDescriptor(interfaceType, type, ServiceLifetime.Singleton));
                         }
                     }
                 }
@@ -50,30 +53,31 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         private static void AddDbContext(this IServiceCollection services, Type type)
         {
-            foreach (var options in services.BuildServiceProvider().GetService<NetSqlOptionsContext>().OptionsList)
+            var optionsList = services.BuildServiceProvider().GetService<NetSqlOptionsContext>().OptionsList;
+            foreach (var options in optionsList)
             {
+                //约定配置项的名称与上下文类名称头相同
                 if (type.Name.StartsWith(options.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     var dbContextOptionsAssemblyName = "";
                     var dbContextOptionsTypeName = "";
                     switch (options.DbType)
                     {
-                        case DbType.SqlServer:
+                        case DatabaseType.SqlServer:
                             dbContextOptionsAssemblyName = "NetSql";
                             dbContextOptionsTypeName = "DbContextOptions";
                             break;
-                        case DbType.MySql:
+                        case DatabaseType.MySql:
                             dbContextOptionsAssemblyName = "NetSql.MySql";
                             dbContextOptionsTypeName = "MySqlDbContextOptions";
                             break;
-                        case DbType.SQLite:
+                        case DatabaseType.SQLite:
                             dbContextOptionsAssemblyName = "NetSql.SQLite";
                             dbContextOptionsTypeName = "SQLiteDbContextOptions";
                             break;
                     }
 
-                    var dbContextOptionsType = AssemblyHelper.GetTypeFromAssembly(dbContextOptionsAssemblyName, dbContextOptionsTypeName);
-
+                    var dbContextOptionsType = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(dbContextOptionsAssemblyName)).GetType($"{dbContextOptionsAssemblyName}.{dbContextOptionsTypeName}");
                     services.AddSingleton(type, Activator.CreateInstance(type, Activator.CreateInstance(dbContextOptionsType, options.ConnString)));
                 }
             }

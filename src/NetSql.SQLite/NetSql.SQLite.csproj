@@ -21,4 +21,10 @@
     <ProjectReference Include="..\NetSql\NetSql.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\NetSql\Internal\*.cs">
+      <Link>Internal\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
 </Project>

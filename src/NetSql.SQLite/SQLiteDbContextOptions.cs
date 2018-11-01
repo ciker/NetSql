@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using Microsoft.Data.Sqlite;
+using NetSql.Enums;
+using NetSql.Internal;
 using NetSql.SqlAdapter;
-using Oldli.Fw.Utils;
-using DbType = NetSql.Enums.DbType;
 
 namespace NetSql.SQLite
 {
@@ -14,14 +14,14 @@ namespace NetSql.SQLite
 
         public IDbConnection DbConnection => new SqliteConnection(ConnectionString);
 
-        public DbType DbType { get; }
+        public DatabaseType DbType { get; }
 
         public SQLiteDbContextOptions(string connectionString)
         {
             Check.NotNull(connectionString, nameof(connectionString), "数据库连接字符串为空");
 
             ConnectionString = connectionString;
-            DbType = DbType.MySql;
+            DbType = DatabaseType.MySql;
             SqlAdapter = new SQLiteAdapter();
         }
     }

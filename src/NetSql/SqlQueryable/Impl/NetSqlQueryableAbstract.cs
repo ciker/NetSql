@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using NetSql.Entities;
 using NetSql.Enums;
 using NetSql.Expressions;
+using NetSql.Internal;
+using NetSql.Pagination;
 using NetSql.SqlAdapter;
 using NetSql.SqlQueryable.Abstract;
-using Oldli.Fw.Utils;
-using Oldli.Fw.Utils.Enums;
-using Oldli.Fw.Utils.Extensions;
-using Oldli.Fw.Utils.Pagination;
 
 namespace NetSql.SqlQueryable.Impl
 {
@@ -88,7 +86,7 @@ namespace NetSql.SqlQueryable.Impl
 
                 #region ==SqlServer分页需要指定排序==
 
-                if (SqlAdapter.Type == DbType.SqlServer && sort.IsNull())
+                if (SqlAdapter.Type == DatabaseType.SqlServer && sort.IsNull())
                 {
                     var first = JoinCollection.First();
                     if (first.EntityDescriptor.PrimaryKeyType == PrimaryKeyType.NoPrimaryKey)

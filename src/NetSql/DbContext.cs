@@ -4,8 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using NetSql.Entities;
-using Oldli.Fw.Utils;
-using Oldli.Fw.Utils.Extensions;
+using NetSql.Internal;
 
 namespace NetSql
 {

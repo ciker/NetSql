@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Oldli.Fw.Utils.Extensions;
+using NetSql.Internal;
 
 namespace NetSql.SqlAdapter
 {

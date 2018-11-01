@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using Oldli.Fw.Utils.Pagination;
+using NetSql.Pagination;
 
 namespace NetSql.SqlQueryable
 {

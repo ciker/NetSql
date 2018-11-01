@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using Oldli.Fw.Utils;
+using NetSql.Internal;
 
 namespace NetSql.Integration
 {

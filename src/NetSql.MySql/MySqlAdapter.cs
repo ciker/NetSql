@@ -1,13 +1,13 @@
 ﻿using System.Text;
 using NetSql.Enums;
+using NetSql.Internal;
 using NetSql.SqlAdapter;
-using Oldli.Fw.Utils.Extensions;
 
 namespace NetSql.MySql
 {
     internal class MySqlAdapter : SqlAdapterAbstract
     {
-        public override DbType Type => DbType.MySql;
+        public override DatabaseType Type => DatabaseType.MySql;
 
         /// <summary>
         /// 左引号

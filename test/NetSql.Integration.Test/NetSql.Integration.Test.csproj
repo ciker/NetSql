@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\NetSql.Integration\NetSql.Integration.csproj" />
+    <ProjectReference Include="..\..\src\NetSql.MySql\NetSql.MySql.csproj" />
     <ProjectReference Include="..\NetSql.Test.Common\NetSql.Test.Common.csproj" />
   </ItemGroup>
 

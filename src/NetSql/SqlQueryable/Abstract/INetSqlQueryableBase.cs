@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Oldli.Fw.Utils.Pagination;
+using NetSql.Pagination;
 
 namespace NetSql.SqlQueryable.Abstract
 {
