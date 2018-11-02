@@ -735,7 +735,8 @@ namespace NetSql.Expressions
         /// <returns></returns>
         private object DynamicInvoke(Expression exp)
         {
-            return Expression.Lambda(exp).Compile().DynamicInvoke();
+            var result = Expression.Lambda(exp).Compile().DynamicInvoke();
+            return result ?? "";
         }
 
         #endregion
