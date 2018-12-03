@@ -1,0 +1,16 @@
+﻿<Project>
+  <PropertyGroup>
+    <Authors>Oldli</Authors>
+    <Version>1.4.2</Version>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>Oldli</Company>
+    <Copyright>Copyright © Oldli 2011-2099</Copyright>
+    <RootNamespacePrefix>NetSql</RootNamespacePrefix>
+    <AssemblyName>$(RootNamespacePrefix).$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <PackageProjectUrl>https://iamoldli.github.io</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iamoldli/NetSql</RepositoryUrl>
+  </PropertyGroup>
+</Project>
