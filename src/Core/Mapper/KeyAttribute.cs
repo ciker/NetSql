@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Mapper
+namespace NetSql.Core.Mapper
 {
     /// <summary>
     /// 主键

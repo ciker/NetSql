@@ -6,12 +6,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.Enums;
+using NetSql.Core.Internal;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Impl
+namespace NetSql.Core.SqlQueryable.Impl
 {
     internal partial class NetSqlQueryable<TEntity> : NetSqlQueryableAbstract<TEntity>, INetSqlQueryable<TEntity> where TEntity : Entity, new()
     {

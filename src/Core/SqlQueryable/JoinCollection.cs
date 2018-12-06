@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.SqlAdapter;
+using NetSql.Core.Entities;
+using NetSql.Core.Internal;
+using NetSql.Core.SqlAdapter;
 
-namespace Td.Fw.Data.Core.SqlQueryable
+namespace NetSql.Core.SqlQueryable
 {
     internal class JoinCollection : IEnumerable<JoinDescriptor>
     {

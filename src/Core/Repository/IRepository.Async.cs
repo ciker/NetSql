@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Pagination;
+using NetSql.Core.Entities;
+using NetSql.Core.Pagination;
 
-namespace Td.Fw.Data.Core.Repository
+namespace NetSql.Core.Repository
 {
     public partial interface IRepository<TEntity> where TEntity : Entity, new()
     {

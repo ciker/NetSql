@@ -1,6 +1,6 @@
-﻿using Td.Fw.Data.Core.Enums;
+﻿using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.Core.Pagination
+namespace NetSql.Core.Pagination
 {
     /// <summary>
     /// 排序规则

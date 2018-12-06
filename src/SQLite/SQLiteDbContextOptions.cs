@@ -4,10 +4,10 @@ using Microsoft.Data.Sqlite;
 using System.Data.SQLite;
 #endif
 using System.Data;
-using Td.Fw.Data.Core;
-using Td.Fw.Data.Core.Enums;
+using NetSql.Core;
+using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.SQLite
+namespace NetSql.SQLite
 {
     /// <summary>
     /// SQLite数据库上下文配置项

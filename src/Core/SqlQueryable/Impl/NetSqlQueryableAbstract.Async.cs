@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Pagination;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.Pagination;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Impl
+namespace NetSql.Core.SqlQueryable.Impl
 {
     internal abstract partial class NetSqlQueryableAbstract<TEntity> : INetSqlQueryableBase<TEntity> where TEntity : Entity, new()
     {

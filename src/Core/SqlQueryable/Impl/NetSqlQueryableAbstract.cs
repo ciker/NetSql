@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Entities.@internal;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Expressions;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.Pagination;
-using Td.Fw.Data.Core.SqlAdapter;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.Entities.@internal;
+using NetSql.Core.Enums;
+using NetSql.Core.Expressions;
+using NetSql.Core.Internal;
+using NetSql.Core.Pagination;
+using NetSql.Core.SqlAdapter;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Impl
+namespace NetSql.Core.SqlQueryable.Impl
 {
     internal abstract partial class NetSqlQueryableAbstract<TEntity> : INetSqlQueryableBase<TEntity> where TEntity : Entity, new()
     {

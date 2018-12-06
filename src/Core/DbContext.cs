@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Internal;
+using NetSql.Core.Entities;
+using NetSql.Core.Internal;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     /// <summary>
     /// 数据库上下文
@@ -100,7 +100,7 @@ namespace Td.Fw.Data.Core
         {
             Check.NotNull(assembly, nameof(assembly), "The asswmbly is null");
 
-            var entityTypes = assembly.GetTypes().Where(t => t.GetGenericTypeDefinition() == typeof(IDbSet<>) || t.GetGenericTypeDefinition() == typeof(DbSet<>));
+            var entityTypes = assembly.GetTypes().Where(p => p.IsGenericType && (p.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.GetGenericTypeDefinition() == typeof(DbSet<>)));
 
             foreach (var entityType in entityTypes)
             {
@@ -123,7 +123,7 @@ namespace Td.Fw.Data.Core
         /// </summary>
         private void InitializeSets()
         {
-            var properties = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
+            var properties = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && (p.PropertyType.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)));
 
             foreach (var propertyInfo in properties)
             {

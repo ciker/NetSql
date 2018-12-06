@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     /// <summary>
     /// 实体数据集

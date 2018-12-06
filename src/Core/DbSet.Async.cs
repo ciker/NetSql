@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Expressions;
-using Td.Fw.Data.Core.Internal;
+using NetSql.Core.Entities;
+using NetSql.Core.Enums;
+using NetSql.Core.Expressions;
+using NetSql.Core.Internal;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     internal partial class DbSet<TEntity> : IDbSet<TEntity> where TEntity : Entity, new()
     {

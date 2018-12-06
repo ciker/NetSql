@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Td.Fw.Data.Core.Entities.@internal
+namespace NetSql.Core.Entities.@internal
 {
     internal class ColumnDescriptor
     {

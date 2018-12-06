@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.SqlAdapter;
+using NetSql.Core.Enums;
+using NetSql.Core.SqlAdapter;
 
-namespace Td.Fw.Data.SQLite
+namespace NetSql.SQLite
 {
     internal class SQLiteAdapter : SqlAdapterAbstract
     {
@@ -27,10 +27,10 @@ namespace Td.Fw.Data.SQLite
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendFormat("SELECT {0} FROM {1}", select, table);
-            if (string.IsNullOrWhiteSpace(where))
+            if (!string.IsNullOrWhiteSpace(where))
                 sqlBuilder.AppendFormat(" WHERE {0}", where);
 
-            if (string.IsNullOrWhiteSpace(sort))
+            if (!string.IsNullOrWhiteSpace(sort))
                 sqlBuilder.AppendFormat("ORDER BY {0}", sort);
 
             sqlBuilder.AppendFormat(" LIMIT {0} OFFSET {1};", take, skip);

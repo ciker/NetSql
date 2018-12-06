@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Mapper
+namespace NetSql.Core.Mapper
 {
     /// <summary>
     /// 表名称，指定实体类在数据库中对应的表名称

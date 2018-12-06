@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Td.Fw.Data.Core.SqlAdapter;
+using NetSql.Core.SqlAdapter;
 
-namespace Td.Fw.Data.SqlServer
+namespace NetSql.SqlServer
 {
     public class SqlServerAdapter : SqlAdapterAbstract
     {
@@ -24,7 +24,7 @@ namespace Td.Fw.Data.SqlServer
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendFormat("SELECT * FROM (SELECT {0},ROW_NUMBER() OVER(ORDER BY {1}) AS row_num FROM {2}", select, sort, table);
-            if (string.IsNullOrWhiteSpace(where))
+            if (!string.IsNullOrWhiteSpace(where))
                 sqlBuilder.AppendFormat(" WHERE {0}", where);
 
             sqlBuilder.AppendFormat(") AS m WHERE m.row_num BETWEEN {0} AND {1}", skip + 1, skip + take);

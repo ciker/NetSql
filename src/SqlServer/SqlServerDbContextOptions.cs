@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using Td.Fw.Data.Core;
-using Td.Fw.Data.Core.Enums;
+using NetSql.Core;
+using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.SqlServer
+namespace NetSql.SqlServer
 {
     /// <summary>
     /// 数据库上下文配置项SqlServer实现

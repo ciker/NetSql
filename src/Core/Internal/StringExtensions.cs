@@ -1,4 +1,4 @@
-﻿namespace Td.Fw.Data.Core.Internal
+﻿namespace NetSql.Core.Internal
 {
     internal static class StringExtensions
     {

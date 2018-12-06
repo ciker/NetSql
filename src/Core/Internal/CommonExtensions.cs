@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Internal
+namespace NetSql.Core.Internal
 {
     /// <summary>
     /// 通用扩展方法

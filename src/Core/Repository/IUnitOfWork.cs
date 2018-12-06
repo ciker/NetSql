@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Td.Fw.Data.Core.Repository
+namespace NetSql.Core.Repository
 {
     public interface IUnitOfWork<TDbContext> where TDbContext : IDbContext
     {

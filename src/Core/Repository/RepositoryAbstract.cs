@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Pagination;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.Pagination;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core.Repository
+namespace NetSql.Core.Repository
 {
     /// <summary>
     /// 仓储抽象类

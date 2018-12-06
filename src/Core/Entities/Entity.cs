@@ -1,4 +1,4 @@
-﻿namespace Td.Fw.Data.Core.Entities
+﻿namespace NetSql.Core.Entities
 {
     /// <summary>
     /// 实体

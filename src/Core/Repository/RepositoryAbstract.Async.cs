@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Pagination;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
+using NetSql.Core.Entities;
+using NetSql.Core.Pagination;
+using NetSql.Core.SqlQueryable.Abstract;
 
-namespace Td.Fw.Data.Core.Repository
+namespace NetSql.Core.Repository
 {
     public abstract partial class RepositoryAbstract<TEntity> where TEntity : Entity, new()
     {

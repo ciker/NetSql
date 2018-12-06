@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Pagination;
+using NetSql.Core.Entities;
+using NetSql.Core.Pagination;
 
-namespace Td.Fw.Data.Core.Repository
+namespace NetSql.Core.Repository
 {
     /// <summary>
     /// 泛型仓储接口

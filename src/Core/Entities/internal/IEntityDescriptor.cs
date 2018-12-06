@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Td.Fw.Data.Core.Enums;
+using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.Core.Entities.@internal
+namespace NetSql.Core.Entities.@internal
 {
     internal interface IEntityDescriptor
     {

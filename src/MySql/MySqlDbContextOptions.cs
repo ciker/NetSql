@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using MySql.Data.MySqlClient;
-using Td.Fw.Data.Core;
-using Td.Fw.Data.Core.Enums;
+using NetSql.Core;
+using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.MySql
+namespace NetSql.MySql
 {
     /// <summary>
     /// MySql数据库上下文配置项

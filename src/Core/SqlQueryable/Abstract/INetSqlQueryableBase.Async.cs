@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Pagination;
+using NetSql.Core.Pagination;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Abstract
+namespace NetSql.Core.SqlQueryable.Abstract
 {
     public partial interface INetSqlQueryableBase<TEntity>
     {

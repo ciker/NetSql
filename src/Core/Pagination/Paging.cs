@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Td.Fw.Data.Core.Pagination
+namespace NetSql.Core.Pagination
 {
     /// <summary>
     /// 分页类

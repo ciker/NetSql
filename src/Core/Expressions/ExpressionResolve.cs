@@ -4,14 +4,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Td.Fw.Data.Core.Entities.@internal;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.Pagination;
-using Td.Fw.Data.Core.SqlAdapter;
-using Td.Fw.Data.Core.SqlQueryable;
+using NetSql.Core.Entities.@internal;
+using NetSql.Core.Enums;
+using NetSql.Core.Internal;
+using NetSql.Core.Pagination;
+using NetSql.Core.SqlAdapter;
+using NetSql.Core.SqlQueryable;
 
-namespace Td.Fw.Data.Core.Expressions
+namespace NetSql.Core.Expressions
 {
     internal class ExpressionResolve : IExpressionResolve
     {

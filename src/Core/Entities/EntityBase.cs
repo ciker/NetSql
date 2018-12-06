@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Entities
+namespace NetSql.Core.Entities
 {
     /// <summary>
     /// 包含指定类型主键的实体

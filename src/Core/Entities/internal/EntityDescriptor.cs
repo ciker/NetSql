@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Mapper;
+using NetSql.Core.Enums;
+using NetSql.Core.Mapper;
 
-namespace Td.Fw.Data.Core.Entities.@internal
+namespace NetSql.Core.Entities.@internal
 {
     /// <summary>
     /// 实体描述

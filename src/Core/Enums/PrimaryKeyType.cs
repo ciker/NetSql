@@ -1,4 +1,4 @@
-﻿namespace Td.Fw.Data.Core.Enums
+﻿namespace NetSql.Core.Enums
 {
     /// <summary>
     /// 主键类型

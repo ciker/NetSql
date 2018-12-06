@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Internal
+namespace NetSql.Core.Internal
 {
     internal class GuidHelper
     {

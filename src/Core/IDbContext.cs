@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     /// <summary>
     /// 数据库上下文

@@ -5,17 +5,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Dapper;
-using Td.Fw.Data.Core.Entities;
-using Td.Fw.Data.Core.Entities.@internal;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Expressions;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.SqlAdapter;
-using Td.Fw.Data.Core.SqlQueryable;
-using Td.Fw.Data.Core.SqlQueryable.Abstract;
-using Td.Fw.Data.Core.SqlQueryable.Impl;
+using NetSql.Core.Entities;
+using NetSql.Core.Entities.@internal;
+using NetSql.Core.Enums;
+using NetSql.Core.Expressions;
+using NetSql.Core.Internal;
+using NetSql.Core.SqlAdapter;
+using NetSql.Core.SqlQueryable;
+using NetSql.Core.SqlQueryable.Abstract;
+using NetSql.Core.SqlQueryable.Impl;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     internal partial class DbSet<TEntity> : IDbSet<TEntity> where TEntity : Entity, new()
     {

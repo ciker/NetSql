@@ -1,9 +1,9 @@
 ﻿using System.Data;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.Internal;
-using Td.Fw.Data.Core.SqlAdapter;
+using NetSql.Core.Enums;
+using NetSql.Core.Internal;
+using NetSql.Core.SqlAdapter;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     /// <summary>
     /// 数据库上下文抽象类

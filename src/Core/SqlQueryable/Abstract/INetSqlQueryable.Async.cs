@@ -4,9 +4,9 @@ using System;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Abstract
+namespace NetSql.Core.SqlQueryable.Abstract
 {
     public partial interface INetSqlQueryable<TEntity> : INetSqlQueryableBase<TEntity, INetSqlQueryable<TEntity>, Expression<Func<TEntity, bool>>> where TEntity : Entity, new()
     {

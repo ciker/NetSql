@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities.@internal;
+using NetSql.Core.Entities.@internal;
 
-namespace Td.Fw.Data.Core.SqlQueryable
+namespace NetSql.Core.SqlQueryable
 {
     internal class JoinDescriptor
     {

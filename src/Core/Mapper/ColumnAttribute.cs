@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Mapper
+namespace NetSql.Core.Mapper
 {
     /// <summary>
     /// 列名，指定实体属性在表中对应的列名

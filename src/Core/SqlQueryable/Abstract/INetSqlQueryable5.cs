@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Abstract
+namespace NetSql.Core.SqlQueryable.Abstract
 {
     public interface INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4, TEntity5> :
         INetSqlQueryableBase<TEntity, INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4, TEntity5>,

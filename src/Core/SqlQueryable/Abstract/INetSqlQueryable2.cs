@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Abstract
+namespace NetSql.Core.SqlQueryable.Abstract
 {
 
     public interface INetSqlQueryable<TEntity, TEntity2> : INetSqlQueryableBase<TEntity, INetSqlQueryable<TEntity, TEntity2>, Expression<Func<TEntity, TEntity2, bool>>> where TEntity : Entity, new() where TEntity2 : Entity, new()

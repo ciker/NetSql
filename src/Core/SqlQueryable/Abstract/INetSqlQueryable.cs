@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core.SqlQueryable.Abstract
+namespace NetSql.Core.SqlQueryable.Abstract
 {
     /// <summary>
     /// Sql构造器

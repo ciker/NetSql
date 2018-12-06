@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Td.Fw.Data.Core.Mapper
+namespace NetSql.Core.Mapper
 {
     /// <summary>
     /// 忽略属性，标识该实体属性不在表中映射列

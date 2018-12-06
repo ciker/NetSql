@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using Td.Fw.Data.Core.Pagination;
+using NetSql.Core.Pagination;
 
-namespace Td.Fw.Data.Core.Expressions
+namespace NetSql.Core.Expressions
 {
     internal interface IExpressionResolve
     {

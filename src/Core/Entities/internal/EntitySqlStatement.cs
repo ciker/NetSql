@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Td.Fw.Data.Core.Enums;
-using Td.Fw.Data.Core.SqlAdapter;
+using NetSql.Core.Enums;
+using NetSql.Core.SqlAdapter;
 
-namespace Td.Fw.Data.Core.Entities.@internal
+namespace NetSql.Core.Entities.@internal
 {
     internal class EntitySqlStatement
     {

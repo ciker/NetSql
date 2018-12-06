@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using Td.Fw.Data.Core.Pagination;
+using NetSql.Core.Pagination;
 
-namespace Td.Fw.Data.Core.SqlQueryable
+namespace NetSql.Core.SqlQueryable
 {
     internal class QueryableBody
     {

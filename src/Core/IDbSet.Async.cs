@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Td.Fw.Data.Core.Entities;
+using NetSql.Core.Entities;
 
-namespace Td.Fw.Data.Core
+namespace NetSql.Core
 {
     public partial interface IDbSet<TEntity> : IDbSet where TEntity : Entity, new()
     {

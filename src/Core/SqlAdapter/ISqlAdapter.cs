@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Td.Fw.Data.Core.Enums;
+using NetSql.Core.Enums;
 
-namespace Td.Fw.Data.Core.SqlAdapter
+namespace NetSql.Core.SqlAdapter
 {
     public interface ISqlAdapter
     {
