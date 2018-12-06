@@ -1,0 +1,144 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using Td.Fw.Data.Core.Entities;
+using Td.Fw.Data.Core.Internal;
+
+namespace Td.Fw.Data.Core
+{
+    /// <summary>
+    /// 数据库上下文
+    /// </summary>
+    public abstract class DbContext : IDbContext
+    {
+        /// <summary>
+        /// 数据集集合
+        /// </summary>
+        private readonly Dictionary<RuntimeTypeHandle, IDbSet> _dbSets = new Dictionary<RuntimeTypeHandle, IDbSet>();
+
+        #region ==属性==
+
+        /// <summary>
+        /// 上下文配置项
+        /// </summary>
+        public IDbContextOptions Options { get; }
+
+        /// <summary>
+        /// 获取一个数据库连接
+        /// </summary>
+        public IDbConnection DbConnection => Options.DbConnection;
+
+        #endregion
+
+        #region ==构造函数==
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected DbContext(IDbContextOptions options)
+        {
+            Check.NotNull(options, nameof(options), "数据库配置项为空");
+            Check.NotNull(options.ConnectionString, nameof(options.ConnectionString), "数据库连接字符串为空");
+
+            Options = options;
+            InitializeSets();
+        }
+
+        #endregion
+
+        #region ==公共方法==
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IDbTransaction BeginTransaction()
+        {
+            var con = DbConnection;
+            con.Open();
+            return con.BeginTransaction();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public IDbSet<TEntity> Set<TEntity>() where TEntity : Entity, new()
+        {
+            var dbSet = _dbSets.FirstOrDefault(m => m.Key.Equals(typeof(TEntity).TypeHandle));
+            if (dbSet.Value != null)
+                return (IDbSet<TEntity>)dbSet.Value;
+
+            throw new NullReferenceException("未找到指定的实体数据集");
+        }
+
+        public void LoadSets(List<Type> entityTypes)
+        {
+            if (entityTypes == null || !entityTypes.Any())
+                return;
+
+            foreach (var entityType in entityTypes)
+            {
+                if (_dbSets.ContainsKey(entityType.TypeHandle))
+                    continue;
+
+                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
+                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
+                //加入缓存
+                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
+            }
+        }
+
+        /// <summary>
+        /// 从指定程序集中初始化数据集
+        /// </summary>
+        /// <param name="assembly"></param>
+        public void LoadSetsFromAssembly(Assembly assembly)
+        {
+            Check.NotNull(assembly, nameof(assembly), "The asswmbly is null");
+
+            var entityTypes = assembly.GetTypes().Where(t => t.GetGenericTypeDefinition() == typeof(IDbSet<>) || t.GetGenericTypeDefinition() == typeof(DbSet<>));
+
+            foreach (var entityType in entityTypes)
+            {
+                if (_dbSets.ContainsKey(entityType.TypeHandle))
+                    continue;
+
+                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
+                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
+                //加入缓存
+                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
+            }
+        }
+
+        #endregion
+
+        #region ==私有方法==
+
+        /// <summary>
+        /// 初始化IDbSet
+        /// </summary>
+        private void InitializeSets()
+        {
+            var properties = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
+
+            foreach (var propertyInfo in properties)
+            {
+                var entityType = propertyInfo.PropertyType.GetGenericArguments()[0];
+                if (_dbSets.ContainsKey(entityType.TypeHandle))
+                    continue;
+
+                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
+                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
+                propertyInfo.SetValue(this, dbSet, null);
+                //加入缓存
+                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
+            }
+        }
+
+        #endregion
+    }
+}

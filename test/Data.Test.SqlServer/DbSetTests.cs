@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Data.Test.Common.Domain.Article;
 using Data.Test.Common.Domain.Category;
 using Data.Test.Common.Domain.User;
 using Data.Test.Common.Infrastructure.Repositories;
-using Td.Fw.Data.Core;
-using Td.Fw.Data.SqlServer;
 using Xunit;
 
-namespace Data.Test.SQLite
+namespace Data.Test.SqlServer
 {
     public class DbSetTests
     {

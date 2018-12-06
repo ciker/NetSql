@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\test\Data.Test.Common\Data.Test.Common.csproj" />
   </ItemGroup>
 
