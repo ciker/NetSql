@@ -1,0 +1,8 @@
+﻿<Project>
+
+  <!--复制nuget包到服务器-->
+  <Target Name="CopyPackage" AfterTargets="Pack"  Condition=" '$(Configuration)'=='Debug' And '$(MSBuildProjectName)'!='WebHost' ">
+    <Copy SourceFiles="$(PackageOutputPath)\$(AssemblyName).$(Version).nupkg" DestinationFolder="D:\Products\Tools\NugetServer\Packages" />
+  </Target>
+
+</Project>

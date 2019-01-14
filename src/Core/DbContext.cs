@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using NetSql.Core.Entities;
-using NetSql.Core.Internal;
+﻿using System.Data;
+using NetSql.Abstractions;
+using NetSql.Abstractions.Entities;
 
 namespace NetSql.Core
 {
@@ -13,132 +9,67 @@ namespace NetSql.Core
     /// </summary>
     public abstract class DbContext : IDbContext
     {
-        /// <summary>
-        /// 数据集集合
-        /// </summary>
-        private readonly Dictionary<RuntimeTypeHandle, IDbSet> _dbSets = new Dictionary<RuntimeTypeHandle, IDbSet>();
-
         #region ==属性==
 
         /// <summary>
-        /// 上下文配置项
+        /// 数据库上下文配置项
         /// </summary>
         public IDbContextOptions Options { get; }
 
         /// <summary>
-        /// 获取一个数据库连接
+        /// 数据库连接
         /// </summary>
-        public IDbConnection DbConnection => Options.DbConnection;
+        public IDbConnection Connection { get; private set; }
+
+        /// <summary>
+        /// 事务
+        /// </summary>
+        public IDbTransaction Transaction { get; private set; }
 
         #endregion
 
         #region ==构造函数==
 
-        /// <summary>
-        /// 
-        /// </summary>
         protected DbContext(IDbContextOptions options)
         {
-            Check.NotNull(options, nameof(options), "数据库配置项为空");
-            Check.NotNull(options.ConnectionString, nameof(options.ConnectionString), "数据库连接字符串为空");
-
             Options = options;
-            InitializeSets();
         }
 
         #endregion
 
-        #region ==公共方法==
+        #region ==方法==
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IDbTransaction BeginTransaction()
+        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            var con = DbConnection;
-            con.Open();
-            return con.BeginTransaction();
+            Open();
+            return Transaction ?? Connection.BeginTransaction(isolationLevel);
         }
 
         /// <summary>
-        /// 
+        /// 打开连接
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public IDbSet<TEntity> Set<TEntity>() where TEntity : Entity, new()
+        public IDbConnection Open()
         {
-            var dbSet = _dbSets.FirstOrDefault(m => m.Key.Equals(typeof(TEntity).TypeHandle));
-            if (dbSet.Value != null)
-                return (IDbSet<TEntity>)dbSet.Value;
+            if (Connection == null)
+                Connection = Options.OpenConnection();
 
-            throw new NullReferenceException("未找到指定的实体数据集");
+            if (Connection.State != ConnectionState.Open)
+                Connection.Open();
+
+            return Connection;
         }
 
-        public void LoadSets(List<Type> entityTypes)
+        public IDbSet<TEntity> Set<TEntity>() where TEntity : IEntity, new()
         {
-            if (entityTypes == null || !entityTypes.Any())
-                return;
-
-            foreach (var entityType in entityTypes)
-            {
-                if (_dbSets.ContainsKey(entityType.TypeHandle))
-                    continue;
-
-                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
-                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
-                //加入缓存
-                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
-            }
-        }
-
-        /// <summary>
-        /// 从指定程序集中初始化数据集
-        /// </summary>
-        /// <param name="assembly"></param>
-        public void LoadSetsFromAssembly(Assembly assembly)
-        {
-            Check.NotNull(assembly, nameof(assembly), "The asswmbly is null");
-
-            var entityTypes = assembly.GetTypes().Where(p => p.IsGenericType && (p.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.GetGenericTypeDefinition() == typeof(DbSet<>)));
-
-            foreach (var entityType in entityTypes)
-            {
-                if (_dbSets.ContainsKey(entityType.TypeHandle))
-                    continue;
-
-                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
-                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
-                //加入缓存
-                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
-            }
+            return new DbSet<TEntity>(this);
         }
 
         #endregion
 
-        #region ==私有方法==
-
-        /// <summary>
-        /// 初始化IDbSet
-        /// </summary>
-        private void InitializeSets()
+        public void Dispose()
         {
-            var properties = GetType().GetProperties().Where(p => p.PropertyType.IsGenericType && (p.PropertyType.GetGenericTypeDefinition() == typeof(IDbSet<>) || p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)));
-
-            foreach (var propertyInfo in properties)
-            {
-                var entityType = propertyInfo.PropertyType.GetGenericArguments()[0];
-                if (_dbSets.ContainsKey(entityType.TypeHandle))
-                    continue;
-
-                var dbSetType = typeof(DbSet<>).MakeGenericType(entityType);
-                var dbSet = Activator.CreateInstance(dbSetType, Options.SqlAdapter, this);
-                propertyInfo.SetValue(this, dbSet, null);
-                //加入缓存
-                _dbSets.Add(entityType.TypeHandle, (IDbSet)dbSet);
-            }
+            Connection?.Dispose();
+            Transaction?.Dispose();
         }
-
-        #endregion
     }
 }

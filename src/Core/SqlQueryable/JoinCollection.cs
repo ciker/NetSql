@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NetSql.Core.Entities;
+using NetSql.Abstractions;
+using NetSql.Abstractions.Entities;
 using NetSql.Core.Internal;
-using NetSql.Core.SqlAdapter;
 
 namespace NetSql.Core.SqlQueryable
 {
@@ -32,7 +32,7 @@ namespace NetSql.Core.SqlQueryable
             _joinDescriptors.Add(descriptor);
         }
 
-        public JoinDescriptor Get<T>() where T : Entity
+        public JoinDescriptor Get<T>() where T : IEntity
         {
             return _joinDescriptors.First(m => m.EntityDescriptor.EntityType == typeof(T));
         }
@@ -50,7 +50,7 @@ namespace NetSql.Core.SqlQueryable
         public string GetColumn(MemberExpression exp)
         {
             var descriptor = Get(exp);
-            var col = descriptor.EntityDescriptor.GetColumnByPropertyName(exp.Member.Name);
+            var col = descriptor.EntityDescriptor.Columns.FirstOrDefault(m => m.PropertyInfo.Name.Equals(exp.Member.Name));
             Check.NotNull(col, nameof(col), $"({exp.Member.Name})列不存在");
 
             if (Count > 1)

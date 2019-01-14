@@ -1,12 +1,12 @@
 ﻿using System.Text;
-using NetSql.Core.Enums;
-using NetSql.Core.SqlAdapter;
+using NetSql.Abstractions.Enums;
+using NetSql.Core;
 
 namespace NetSql.MySql
 {
     internal class MySqlAdapter : SqlAdapterAbstract
     {
-        public override DatabaseType Type => DatabaseType.MySql;
+        public override SqlDialect SqlDialect => SqlDialect.MySql;
 
         /// <summary>
         /// 左引号

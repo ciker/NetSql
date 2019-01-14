@@ -1,11 +1,6 @@
-﻿#if NETSTANDARD2_0
+﻿using System.Data;
 using Microsoft.Data.Sqlite;
-#else
-using System.Data.SQLite;
-#endif
-using System.Data;
 using NetSql.Core;
-using NetSql.Core.Enums;
 
 namespace NetSql.SQLite
 {
@@ -14,26 +9,13 @@ namespace NetSql.SQLite
     /// </summary>
     public class SQLiteDbContextOptions : DbContextOptionsAbstract
     {
-
-#if NETSTANDARD2_0
-        /// <summary>
-        /// 数据库连接
-        /// </summary>
-        public override IDbConnection DbConnection => new SqliteConnection(ConnectionString);
-#else
-        /// <summary>
-        /// 数据库连接
-        /// </summary>
-        public override IDbConnection DbConnection => new SQLiteConnection(ConnectionString);
-#endif
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connectionString"></param>
-        public SQLiteDbContextOptions(string connectionString) : base(connectionString, new SQLiteAdapter(), DatabaseType.SQLite)
+        public SQLiteDbContextOptions(string name, string connectionString) : base(name, connectionString, new SQLiteAdapter())
         {
+        }
 
+        public override IDbConnection OpenConnection()
+        {
+            return new SqliteConnection(ConnectionString);
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using NetSql.Core.Entities.@internal;
-using NetSql.Core.Enums;
+using NetSql.Abstractions;
+using NetSql.Abstractions.Entities;
+using NetSql.Abstractions.Enums;
+using NetSql.Abstractions.Pagination;
 using NetSql.Core.Internal;
-using NetSql.Core.Pagination;
-using NetSql.Core.SqlAdapter;
 using NetSql.Core.SqlQueryable;
 
 namespace NetSql.Core.Expressions
@@ -717,7 +717,7 @@ namespace NetSql.Core.Expressions
                 if (initExp.Bindings[i] is MemberAssignment assignment)
                 {
                     var descriptor = _joinCollection.Get(initExp.Type);
-                    var col = descriptor.EntityDescriptor.GetColumnByPropertyName(assignment.Member.Name);
+                    var col = descriptor.EntityDescriptor.Columns.FirstOrDefault(m => m.PropertyInfo.Name.Equals(assignment.Member.Name));
                     if (col != null)
                     {
                         AppendColum(sqlBuilder, descriptor, col);
@@ -751,7 +751,7 @@ namespace NetSql.Core.Expressions
             sqlBuilder.Append(_joinCollection.GetColumn(exp));
         }
 
-        private void AppendColum(StringBuilder sqlBuilder, JoinDescriptor descriptor, ColumnDescriptor col)
+        private void AppendColum(StringBuilder sqlBuilder, JoinDescriptor descriptor, IColumnDescriptor col)
         {
             sqlBuilder.Append(IsJoin
                 ? $"{_sqlAdapter.AppendQuote(descriptor.Alias)}.{_sqlAdapter.AppendQuote(col.Name)}"
@@ -770,7 +770,7 @@ namespace NetSql.Core.Expressions
         {
             if (type.IsEnum || type == typeof(bool))
                 sqlBuilder.AppendFormat("{0}", value.ToInt());
-            else if (type == typeof(string) || type == typeof(char))
+            else if (type == typeof(string) || type == typeof(char) || type == typeof(Guid))
                 sqlBuilder.AppendFormat("'{0}'", value);
             else if (type == typeof(DateTime))
                 sqlBuilder.AppendFormat("'{0:yyyy-MM-dd HH:mm:ss}'", value.ToDateTime());

@@ -1,0 +1,9 @@
+{
+  "Connections": [
+    {
+      "Name": "Blog",
+      "DbType": 1,
+      "ConnString": "Server=localhost;Database=blog;Uid=root;Pwd=oldli!@#123;Allow User Variables=True;charset=utf8;SslMode=none;"
+    }
+  ]
+}

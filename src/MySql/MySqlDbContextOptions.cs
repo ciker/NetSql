@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using MySql.Data.MySqlClient;
 using NetSql.Core;
-using NetSql.Core.Enums;
 
 namespace NetSql.MySql
 {
@@ -11,17 +10,17 @@ namespace NetSql.MySql
     public class MySqlDbContextOptions : DbContextOptionsAbstract
     {
         /// <summary>
-        /// 数据库连接
-        /// </summary>
-        public override IDbConnection DbConnection => new MySqlConnection(ConnectionString);
-
-        /// <summary>
         /// 
         /// </summary>
-        /// <param name="connectionString"></param>
-        public MySqlDbContextOptions(string connectionString) : base(connectionString, new MySqlAdapter(), DatabaseType.MySql)
+        /// <param name="name">连接名称</param>
+        /// <param name="connectionString">连接字符串</param>
+        public MySqlDbContextOptions(string name, string connectionString) : base(name, connectionString, new MySqlAdapter())
         {
+        }
 
+        public override IDbConnection OpenConnection()
+        {
+            return new MySqlConnection(ConnectionString);
         }
     }
 }

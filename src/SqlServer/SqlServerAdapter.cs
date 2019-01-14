@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using NetSql.Core.SqlAdapter;
+using NetSql.Core;
 
 namespace NetSql.SqlServer
 {

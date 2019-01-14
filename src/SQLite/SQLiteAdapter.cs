@@ -1,12 +1,12 @@
 ﻿using System.Text;
-using NetSql.Core.Enums;
-using NetSql.Core.SqlAdapter;
+using NetSql.Abstractions.Enums;
+using NetSql.Core;
 
 namespace NetSql.SQLite
 {
     internal class SQLiteAdapter : SqlAdapterAbstract
     {
-        public override DatabaseType Type => DatabaseType.SQLite;
+        public override SqlDialect SqlDialect => SqlDialect.SQLite;
 
         /// <summary>
         /// 左引号

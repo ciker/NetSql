@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using NetSql.Core.Entities.@internal;
+using NetSql.Abstractions.Entities;
 
 namespace NetSql.Core.SqlQueryable
 {

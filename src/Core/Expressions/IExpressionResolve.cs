@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using NetSql.Core.Pagination;
+using NetSql.Abstractions.Pagination;
 
 namespace NetSql.Core.Expressions
 {
