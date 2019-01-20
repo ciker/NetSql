@@ -4,14 +4,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using NetSql.Abstractions;
-using NetSql.Abstractions.Entities;
-using NetSql.Abstractions.Enums;
-using NetSql.Abstractions.Pagination;
-using NetSql.Core.Internal;
-using NetSql.Core.SqlQueryable;
+using Td.Lib.Data.Abstractions;
+using Td.Lib.Data.Abstractions.Entities;
+using Td.Lib.Data.Abstractions.Enums;
+using Td.Lib.Data.Abstractions.Pagination;
+using Td.Lib.Data.Core.Internal;
+using Td.Lib.Data.Core.SqlQueryable;
 
-namespace NetSql.Core.Expressions
+namespace Td.Lib.Data.Core.Expressions
 {
     internal class ExpressionResolve : IExpressionResolve
     {
@@ -434,6 +434,16 @@ namespace NetSql.Core.Expressions
                         {
                             list = value as List<string>;
                         }
+                        else if (valueType == typeof(Guid))
+                        {
+                            if (value is List<Guid> valueList)
+                            {
+                                foreach (var c in valueList)
+                                {
+                                    list.Add(c.ToString());
+                                }
+                            }
+                        }
                         else if (valueType == typeof(char))
                         {
                             if (value is List<char> valueList)
@@ -513,7 +523,6 @@ namespace NetSql.Core.Expressions
                         if (list == null)
                             return;
 
-                        #endregion
 
                         //值类型不带引号
                         if (isValueType)
@@ -540,6 +549,8 @@ namespace NetSql.Core.Expressions
                         }
                     }
 
+                    #endregion
+
                     sqlBuilder.Append(") ");
                 }
             }
@@ -559,6 +570,17 @@ namespace NetSql.Core.Expressions
                 if (valueType == "System.String[]")
                 {
                     list = value as string[];
+                }
+                else if (valueType == "System.Guid[]")
+                {
+                    if (value is Guid[] valueList)
+                    {
+                        list = new string[valueList.Length];
+                        for (var i = 0; i < valueList.Length; i++)
+                        {
+                            list[i] = valueList[i].ToString();
+                        }
+                    }
                 }
                 else if (valueType == "System.Char[]")
                 {
@@ -646,8 +668,6 @@ namespace NetSql.Core.Expressions
                 if (list == null)
                     return;
 
-                #endregion
-
                 //值类型不带引号
                 if (isValueType)
                 {
@@ -671,6 +691,9 @@ namespace NetSql.Core.Expressions
                         }
                     }
                 }
+
+                #endregion
+
                 sqlBuilder.Append(") ");
             }
         }
