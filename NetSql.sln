@@ -34,6 +34,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServer", "src\SqlServer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Query", "src\Query\Query.csproj", "{04759EA7-B1DE-413B-A98C-4E111F52DC82}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{2C6EE821-AB1B-4025-9B37-058AE23F3F99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleConsole", "sample\SampleConsole\SampleConsole.csproj", "{2FBA485B-1B97-4C3E-B8FE-93F5723E006D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +72,10 @@ Global
 		{04759EA7-B1DE-413B-A98C-4E111F52DC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04759EA7-B1DE-413B-A98C-4E111F52DC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04759EA7-B1DE-413B-A98C-4E111F52DC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FBA485B-1B97-4C3E-B8FE-93F5723E006D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FBA485B-1B97-4C3E-B8FE-93F5723E006D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FBA485B-1B97-4C3E-B8FE-93F5723E006D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FBA485B-1B97-4C3E-B8FE-93F5723E006D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +89,7 @@ Global
 		{65500063-8D0C-4FF1-B825-47AA586EED11} = {B406C24F-DAE9-44F5-9377-7511A29ECCAD}
 		{1B1B4629-01B7-4C55-B2F0-236275CCA1F8} = {B406C24F-DAE9-44F5-9377-7511A29ECCAD}
 		{04759EA7-B1DE-413B-A98C-4E111F52DC82} = {08872DE1-DDA7-4520-83EF-8FC73279AEAA}
+		{2FBA485B-1B97-4C3E-B8FE-93F5723E006D} = {2C6EE821-AB1B-4025-9B37-058AE23F3F99}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F4DBA1C-0B8F-4A48-A32F-FCD9F6841964}
