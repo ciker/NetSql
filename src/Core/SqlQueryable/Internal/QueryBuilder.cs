@@ -12,7 +12,7 @@ using NetSql.Core.Internal;
 
 namespace NetSql.Core.SqlQueryable.Internal
 {
-    internal class QueryBuilder
+   internal class QueryBuilder
     {
         #region ==字段==
 
@@ -277,6 +277,9 @@ namespace NetSql.Core.SqlQueryable.Internal
 
         private void ResolveWhere(StringBuilder sqlBuilder, QueryParameters parameters)
         {
+            if (_queryBody.Where == null)
+                return;
+
             var whereSql = Resolve(_queryBody.Where, parameters);
             if (whereSql.NotNull())
             {
@@ -391,7 +394,7 @@ namespace NetSql.Core.SqlQueryable.Internal
 
         private string Resolve(Expression whereExpression, QueryParameters parameters)
         {
-            if (_queryBody.Where == null)
+            if (whereExpression == null)
                 return string.Empty;
 
             var sqlBuilder = new StringBuilder();
