@@ -22,11 +22,15 @@ namespace NetSql.Core
         public void Commit()
         {
             _transaction?.Commit();
+            _transaction = null;
+            _dbContext.Transaction = null;
         }
 
         public void Rollback()
         {
             _transaction?.Rollback();
+            _transaction = null;
+            _dbContext.Transaction = null;
         }
 
         public void Dispose()

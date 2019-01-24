@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using NetSql.Core;
 
 namespace NetSql.SqlServer
@@ -9,7 +10,7 @@ namespace NetSql.SqlServer
     /// </summary>
     public class SqlServerDbContextOptions : DbContextOptionsAbstract
     {
-        public SqlServerDbContextOptions(string name, string connectionString) : base(name, connectionString, new SqlServerAdapter())
+        public SqlServerDbContextOptions(string name, string connectionString, ILoggerFactory loggerFactory = null) : base(name, connectionString, new SqlServerAdapter(), loggerFactory)
         {
         }
 

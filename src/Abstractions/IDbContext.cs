@@ -22,7 +22,7 @@ namespace NetSql.Abstractions
         /// <summary>
         /// 事务
         /// </summary>
-        IDbTransaction Transaction { get; }
+        IDbTransaction Transaction { get; set; }
 
         /// <summary>
         /// 开启事务

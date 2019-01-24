@@ -24,7 +24,7 @@ namespace NetSql.Core
         /// <summary>
         /// 事务
         /// </summary>
-        public IDbTransaction Transaction { get; private set; }
+        public IDbTransaction Transaction { get; set; }
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace NetSql.Core
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             Open();
-            return Transaction ?? Connection.BeginTransaction(isolationLevel);
+            return Transaction = Transaction ?? Connection.BeginTransaction(isolationLevel);
         }
 
         /// <summary>

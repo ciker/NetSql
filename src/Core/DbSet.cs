@@ -6,10 +6,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Logging;
 using NetSql.Abstractions;
 using NetSql.Abstractions.Entities;
 using NetSql.Abstractions.SqlQueryable;
-using NetSql.Core.Expressions;
 using NetSql.Core.Internal;
 using NetSql.Core.SqlQueryable;
 
@@ -31,6 +31,8 @@ namespace NetSql.Core
 
         private readonly EntitySql _sql;
 
+        private readonly ILogger _logger;
+
         #endregion
 
         #region ==构造函数==
@@ -41,6 +43,8 @@ namespace NetSql.Core
             EntityDescriptor = DbContext.Options.EntityDescriptorCollection.Get<TEntity>();
             _sqlAdapter = context.Options.SqlAdapter;
             _sql = EntityDescriptor.Sql;
+
+            _logger = context.Options.LoggerFactory?.CreateLogger("DbSet-" + EntityDescriptor.TableName);
         }
 
         #endregion
@@ -94,10 +98,14 @@ namespace NetSql.Core
             if (EntityDescriptor.PrimaryKey.IsInt())
             {
                 var sql = _sql.Insert + _sqlAdapter.IdentitySql;
+
                 var id = await ExecuteScalarAsync<int>(sql, entity);
                 if (id > 0)
                 {
                     EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, id);
+
+                    _logger?.LogDebug("Insert:({0}),NewID({1})", sql, id);
+
                     return true;
                 }
             }
@@ -108,6 +116,9 @@ namespace NetSql.Core
                 if (id > 0)
                 {
                     EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, id);
+
+                    _logger?.LogDebug("Insert:({0}),NewID({1})", sql, id);
+
                     return true;
                 }
             }
@@ -117,10 +128,14 @@ namespace NetSql.Core
                 if (id == Guid.Empty)
                     EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, GuidGenerator.GenerateTimeBasedGuid());
 
+                _logger?.LogDebug("Insert:({0}),NewID({1})", _sql.Insert, id);
+
                 return await ExecuteAsync(_sql.Insert, entity) > 0;
             }
             else
             {
+                _logger?.LogDebug("Insert:({0})", _sql.Insert);
+
                 return await ExecuteAsync(_sql.Insert, entity) > 0;
             }
 
@@ -131,143 +146,208 @@ namespace NetSql.Core
 
         #region ==BatchInsert==
 
-        public bool BatchInsert(List<TEntity> entityList, int flushSize = 2048)
+        public bool BatchInsert(List<TEntity> entityList, int flushSize = 10000)
         {
             if (entityList == null || !entityList.Any())
                 return false;
+
+            var uow = new UnitOfWork(DbContext);
 
             //判断有没有事务
             var hasTran = DbContext.Transaction != null;
             try
             {
                 if (!hasTran)
-                    DbContext.BeginTransaction();
+                    uow.BeginTransaction();
 
-                var sqlBuilder = new StringBuilder();
-
-                for (var t = 0; t < entityList.Count; t++)
+                if (_sqlAdapter.SqlDialect == Abstractions.Enums.SqlDialect.SQLite)
                 {
-                    var mod = (t + 1) % 1000;
-                    if (mod == 1)
-                    {
-                        sqlBuilder.Clear();
-                        sqlBuilder.Append(_sql.BatchInsert);
-                    }
+                    #region ==SQLite使用Dapper的官方方法==
 
-                    var entity = entityList[t];
-                    sqlBuilder.Append("(");
-                    for (var i = 0; i < _sql.BatchInsertColumnList.Count; i++)
+                    if (EntityDescriptor.PrimaryKey.IsGuid())
                     {
-                        var col = _sql.BatchInsertColumnList[i];
-                        var value = col.PropertyInfo.GetValue(entity);
-                        var type = col.PropertyInfo.PropertyType;
-
-                        if (col.IsPrimaryKey && EntityDescriptor.PrimaryKey.IsGuid())
+                        entityList.ForEach(entity =>
                         {
+                            var value = EntityDescriptor.PrimaryKey.PropertyInfo.GetValue(entity);
                             if ((Guid)value == Guid.Empty)
                             {
                                 value = GuidGenerator.GenerateTimeBasedGuid();
                                 EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, value);
                             }
+                        });
+                    }
+
+                    Execute(_sql.Insert, entityList);
+
+                    #endregion
+                }
+                else
+                {
+                    #region ==自定义==
+
+                    var sqlBuilder = new StringBuilder();
+
+                    for (var t = 0; t < entityList.Count; t++)
+                    {
+                        var mod = (t + 1) % flushSize;
+                        if (mod == 1)
+                        {
+                            sqlBuilder.Clear();
+                            sqlBuilder.Append(_sql.BatchInsert);
                         }
 
-                        ExpressionResolve.AppendValue(sqlBuilder, type, value);
+                        var entity = entityList[t];
+                        sqlBuilder.Append("(");
+                        for (var i = 0; i < _sql.BatchInsertColumnList.Count; i++)
+                        {
+                            var col = _sql.BatchInsertColumnList[i];
+                            var value = col.PropertyInfo.GetValue(entity);
+                            var type = col.PropertyInfo.PropertyType;
 
-                        if (i < _sql.BatchInsertColumnList.Count - 1)
+                            if (col.IsPrimaryKey && EntityDescriptor.PrimaryKey.IsGuid())
+                            {
+                                if ((Guid)value == Guid.Empty)
+                                {
+                                    value = GuidGenerator.GenerateTimeBasedGuid();
+                                    EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, value);
+                                }
+                            }
+
+                            AppendValue(sqlBuilder, type, value);
+
+                            if (i < _sql.BatchInsertColumnList.Count - 1)
+                                sqlBuilder.Append(",");
+                        }
+
+                        sqlBuilder.Append(")");
+
+                        if (mod > 0 && t < entityList.Count - 1)
                             sqlBuilder.Append(",");
+                        else if (mod == 0 || t == entityList.Count - 1)
+                        {
+                            sqlBuilder.Append(";");
+                            Execute(sqlBuilder.ToString());
+                        }
                     }
 
-                    sqlBuilder.Append(")");
-
-                    if (mod > 0 && t < entityList.Count - 1)
-                        sqlBuilder.Append(",");
-                    else if (mod == 0 || t == entityList.Count - 1)
-                    {
-                        sqlBuilder.Append(";");
-                        Execute(sqlBuilder.ToString());
-                    }
+                    #endregion
                 }
 
                 if (!hasTran)
-                    DbContext.Transaction.Commit();
+                    uow.Commit();
 
                 return true;
             }
             catch
             {
                 if (!hasTran)
-                    DbContext.Transaction.Rollback();
+                    uow.Commit();
+
+                uow.Dispose();
 
                 throw;
             }
         }
 
-        public async Task<bool> BatchInsertAsync(List<TEntity> entityList, int flushSize = 2048)
+        public async Task<bool> BatchInsertAsync(List<TEntity> entityList, int flushSize = 10000)
         {
             if (entityList == null || !entityList.Any())
                 return false;
+
+            var uow = new UnitOfWork(DbContext);
 
             //判断有没有事务
             var hasTran = DbContext.Transaction != null;
             try
             {
                 if (!hasTran)
-                    DbContext.BeginTransaction();
+                    uow.BeginTransaction();
 
-                var sqlBuilder = new StringBuilder();
-
-                for (var t = 0; t < entityList.Count; t++)
+                if (_sqlAdapter.SqlDialect == Abstractions.Enums.SqlDialect.SQLite)
                 {
-                    var mod = (t + 1) % 1000;
-                    if (mod == 1)
-                    {
-                        sqlBuilder.Clear();
-                        sqlBuilder.Append(_sql.BatchInsert);
-                    }
+                    #region ==SQLite使用Dapper的官方方法==
 
-                    var entity = entityList[t];
-                    sqlBuilder.Append("(");
-                    for (var i = 0; i < _sql.BatchInsertColumnList.Count; i++)
+                    if (EntityDescriptor.PrimaryKey.IsGuid())
                     {
-                        var col = _sql.BatchInsertColumnList[i];
-                        var value = col.PropertyInfo.GetValue(entity);
-                        var type = col.PropertyInfo.PropertyType;
-
-                        if (col.IsPrimaryKey && EntityDescriptor.PrimaryKey.IsGuid())
+                        entityList.ForEach(entity =>
                         {
+                            var value = EntityDescriptor.PrimaryKey.PropertyInfo.GetValue(entity);
                             if ((Guid)value == Guid.Empty)
                             {
                                 value = GuidGenerator.GenerateTimeBasedGuid();
                                 EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, value);
                             }
+                        });
+                    }
+
+                    await ExecuteAsync(_sql.Insert, entityList);
+
+                    #endregion
+                }
+                else
+                {
+                    #region ==自定义方法==
+
+                    var sqlBuilder = new StringBuilder();
+
+                    for (var t = 0; t < entityList.Count; t++)
+                    {
+                        var mod = (t + 1) % flushSize;
+                        if (mod == 1)
+                        {
+                            sqlBuilder.Clear();
+                            sqlBuilder.Append(_sql.BatchInsert);
                         }
 
-                        ExpressionResolve.AppendValue(sqlBuilder, type, value);
+                        var entity = entityList[t];
+                        sqlBuilder.Append("(");
+                        for (var i = 0; i < _sql.BatchInsertColumnList.Count; i++)
+                        {
+                            var col = _sql.BatchInsertColumnList[i];
+                            var value = col.PropertyInfo.GetValue(entity);
+                            var type = col.PropertyInfo.PropertyType;
 
-                        if (i < _sql.BatchInsertColumnList.Count - 1)
+                            //是否GUID主键
+                            if (col.IsPrimaryKey && EntityDescriptor.PrimaryKey.IsGuid())
+                            {
+                                if ((Guid)value == Guid.Empty)
+                                {
+                                    value = GuidGenerator.GenerateTimeBasedGuid();
+                                    EntityDescriptor.PrimaryKey.PropertyInfo.SetValue(entity, value);
+                                }
+                            }
+
+                            AppendValue(sqlBuilder, type, value);
+
+                            if (i < _sql.BatchInsertColumnList.Count - 1)
+                                sqlBuilder.Append(",");
+                        }
+
+                        sqlBuilder.Append(")");
+
+                        if (mod > 0 && t < entityList.Count - 1)
                             sqlBuilder.Append(",");
+                        else if (mod == 0 || t == entityList.Count - 1)
+                        {
+                            sqlBuilder.Append(";");
+                            await ExecuteAsync(sqlBuilder.ToString());
+                        }
                     }
 
-                    sqlBuilder.Append(")");
-
-                    if (mod > 0 && t < entityList.Count - 1)
-                        sqlBuilder.Append(",");
-                    else if (mod == 0 || t == entityList.Count - 1)
-                    {
-                        sqlBuilder.Append(";");
-                        await ExecuteAsync(sqlBuilder.ToString());
-                    }
+                    #endregion
                 }
 
                 if (!hasTran)
-                    DbContext.Transaction.Commit();
+                    uow.Commit();
 
                 return true;
             }
             catch
             {
                 if (!hasTran)
-                    DbContext.Transaction.Rollback();
+                    uow.Rollback();
+
+                uow.Dispose();
 
                 throw;
             }
@@ -277,73 +357,76 @@ namespace NetSql.Core
 
         #region ==Delete==
 
-        public bool Delete(dynamic id)
+        private DynamicParameters GetDeleteParameters(dynamic id)
         {
             PrimaryKeyValidate(id);
 
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
+            var dynParams = new DynamicParameters();
+            dynParams.Add(_sqlAdapter.AppendParameter("Id"), id);
+            return dynParams;
+        }
 
-            return Execute(_sql.DeleteSingle, dynParms) > 0;
+        public bool Delete(dynamic id)
+        {
+            var dynParams = GetDeleteParameters(id);
+            return Execute(_sql.DeleteSingle, dynParams) > 0;
         }
 
         public async Task<bool> DeleteAsync(dynamic id)
         {
-            PrimaryKeyValidate(id);
-
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
-
-            return await ExecuteAsync(_sql.DeleteSingle, dynParms) > 0;
+            var dynParams = GetDeleteParameters(id);
+            return await ExecuteAsync(_sql.DeleteSingle, dynParams) > 0;
         }
 
         #endregion
 
         #region ==SoftDelete==
 
-        public bool SoftDelete(dynamic id, dynamic deletor)
+        private DynamicParameters GetSoftDeleteParameters(dynamic id, dynamic deleter)
         {
             PrimaryKeyValidate(id);
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
-            dynParms.Add(_sqlAdapter.AppendParameter("DeletedTime"), DateTime.Now);
-            dynParms.Add(_sqlAdapter.AppendParameter("Deletor"), deletor);
+            var dynParams = new DynamicParameters();
+            dynParams.Add(_sqlAdapter.AppendParameter("Id"), id);
+            dynParams.Add(_sqlAdapter.AppendParameter("DeletedTime"), DateTime.Now);
+            dynParams.Add(_sqlAdapter.AppendParameter("Deleter"), deleter);
 
-            return Execute(_sql.SoftDeleteSingle, dynParms) > 0;
+            return dynParams;
         }
 
-        public async Task<bool> SoftDeleteAsync(dynamic id, dynamic deletor)
+        public bool SoftDelete(dynamic id, dynamic deleter)
         {
-            PrimaryKeyValidate(id);
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
-            dynParms.Add(_sqlAdapter.AppendParameter("DeletedTime"), DateTime.Now);
-            dynParms.Add(_sqlAdapter.AppendParameter("Deletor"), deletor);
+            var dynParams = GetSoftDeleteParameters(id, deleter);
 
-            return await ExecuteAsync(_sql.SoftDeleteSingle, dynParms) > 0;
+            return Execute(_sql.SoftDeleteSingle, dynParams) > 0;
+        }
+
+        public async Task<bool> SoftDeleteAsync(dynamic id, dynamic deleter)
+        {
+            var dynParams = GetSoftDeleteParameters(id, deleter);
+            return await ExecuteAsync(_sql.SoftDeleteSingle, dynParams) > 0;
         }
 
         #endregion
 
         #region ==Update==
 
-        public bool Update(TEntity entity)
+        private void UpdateCheck(TEntity entity)
         {
             Check.NotNull(entity, nameof(entity));
 
             if (EntityDescriptor.PrimaryKey.IsNo())
                 throw new ArgumentException("没有主键的实体对象无法使用该方法", nameof(entity));
+        }
 
+        public bool Update(TEntity entity)
+        {
+            UpdateCheck(entity);
             return Execute(_sql.UpdateSingle, entity) > 0;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)
         {
-            Check.NotNull(entity, nameof(entity));
-
-            if (EntityDescriptor.PrimaryKey.IsNo())
-                throw new ArgumentException("没有主键的实体对象无法使用该方法", nameof(entity));
-
+            UpdateCheck(entity);
             return await ExecuteAsync(_sql.UpdateSingle, entity) > 0;
         }
 
@@ -351,24 +434,24 @@ namespace NetSql.Core
 
         #region ==Get==
 
-        public TEntity Get(dynamic id)
+        private DynamicParameters GetParameters(dynamic id)
         {
             PrimaryKeyValidate(id);
 
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
-
-            return QuerySingleOrDefault<TEntity>(_sql.Get, dynParms);
+            var dynParams = new DynamicParameters();
+            dynParams.Add(_sqlAdapter.AppendParameter("Id"), id);
+            return dynParams;
+        }
+        public TEntity Get(dynamic id)
+        {
+            var dynParams = GetParameters(id);
+            return QuerySingleOrDefault<TEntity>(_sql.Get, dynParams);
         }
 
         public Task<TEntity> GetAsync(dynamic id)
         {
-            PrimaryKeyValidate(id);
-
-            var dynParms = new DynamicParameters();
-            dynParms.Add(_sqlAdapter.AppendParameter("Id"), id);
-
-            return QuerySingleOrDefaultAsync<TEntity>(_sql.Get, dynParms);
+            var dynParams = GetParameters(id);
+            return QuerySingleOrDefaultAsync<TEntity>(_sql.Get, dynParams);
         }
 
         #endregion
@@ -448,20 +531,6 @@ namespace NetSql.Core
 
         #endregion
 
-        #region ==Pagination==
-
-        public INetSqlQueryable<TEntity, TEntity2> LeftJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new()
-        {
-            return new NetSqlQueryable<TEntity, TEntity2>(this, onExpression);
-        }
-
-        public INetSqlQueryable<TEntity, TEntity2> InnerJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new()
-        {
-            return new NetSqlQueryable<TEntity, TEntity2>(this, onExpression, JoinType.Inner);
-        }
-
-        #endregion
-
         #region ==私有方法==
 
         /// <summary>
@@ -487,6 +556,23 @@ namespace NetSql.Core
             }
         }
 
+        /// <summary>
+        /// 附加值
+        /// </summary>
+        /// <param name="sqlBuilder"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        private void AppendValue(StringBuilder sqlBuilder, Type type, object value)
+        {
+            if (type.IsEnum || type == typeof(bool))
+                sqlBuilder.AppendFormat("{0}", value.ToInt());
+            else if (type == typeof(string) || type == typeof(char) || type == typeof(Guid))
+                sqlBuilder.AppendFormat("'{0}'", value);
+            else if (type == typeof(DateTime))
+                sqlBuilder.AppendFormat("'{0:yyyy-MM-dd HH:mm:ss}'", value.ToDateTime());
+            else
+                sqlBuilder.AppendFormat("{0}", value);
+        }
         #endregion
     }
 }

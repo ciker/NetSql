@@ -5,4 +5,8 @@
     <Description>数据访问库抽象层</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
 </Project>

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using Data.Test.Domain.Article;
 using Data.Test.Infrastructure.Repositories;
-using NetSql.Abstractions.Pagination;
 using Xunit;
 
 namespace Data.Test
@@ -39,7 +37,7 @@ namespace Data.Test
         }
 
         [Fact]
-        public async void BatchAddAsyncTest()
+        public async Task BatchAddAsyncTest()
         {
             var list = new List<Article>();
             for (int i = 0; i < 10000; i++)
@@ -111,15 +109,6 @@ namespace Data.Test
         {
             var list = await _articleRepository.GetAllAsync();
             Assert.NotEmpty(list);
-        }
-
-        [Fact]
-        public async void PaginationAsyncTest()
-        {
-            var paging = new Paging(1, 2);
-            var list = await _articleRepository.PaginationAsync(paging);
-            Assert.NotEmpty(list);
-            Assert.Equal(2, list.Count);
         }
     }
 }

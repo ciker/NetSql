@@ -23,7 +23,7 @@ namespace NetSql.SQLite
         /// </summary>
         public override string IdentitySql => "SELECT LAST_INSERT_ROWID() ID;";
 
-        public override string GeneratePagingSql(string @select, string table, string @where, string sort, int skip, int take)
+        public override string GeneratePagingSql(string select, string table, string where, string sort, int skip, int take)
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendFormat("SELECT {0} FROM {1}", select, table);
@@ -35,6 +35,11 @@ namespace NetSql.SQLite
 
             sqlBuilder.AppendFormat(" LIMIT {0} OFFSET {1};", take, skip);
             return sqlBuilder.ToString();
+        }
+
+        public override string GenerateFirstSql(string select, string table, string where, string sort)
+        {
+            return GeneratePagingSql(select, table, where, sort, 0, 1);
         }
     }
 }

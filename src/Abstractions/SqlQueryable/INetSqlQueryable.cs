@@ -1,52 +1,80 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetSql.Abstractions.Entities;
+using NetSql.Abstractions.Pagination;
 
 namespace NetSql.Abstractions.SqlQueryable
 {
-    /// <summary>
-    /// Sql构造器
-    /// </summary>
-    public interface INetSqlQueryable<TEntity> : INetSqlQueryableBase<TEntity, INetSqlQueryable<TEntity>, Expression<Func<TEntity, bool>>> where TEntity : IEntity, new()
+    public interface INetSqlQueryable
     {
-        /// <summary>
-        /// 升序
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> expression);
+        #region ==ToList==
 
         /// <summary>
-        /// 降序
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> expression);
-
-        /// <summary>
-        /// 查询指定列
-        /// </summary>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity> Select<TResult>(Expression<Func<TEntity, TResult>> expression);
-
-        /// <summary>
-        /// 获取最大值
+        /// 查询列表，返回指定类型
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="expression"></param>
         /// <returns></returns>
-        TResult Max<TResult>(Expression<Func<TEntity, TResult>> expression);
+        IList<TResult> ToList<TResult>();
 
         /// <summary>
-        /// 获取最小值
+        /// 查询列表，返回指定类型
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="expression"></param>
         /// <returns></returns>
-        TResult Min<TResult>(Expression<Func<TEntity, TResult>> expression);
+        Task<IList<TResult>> ToListAsync<TResult>();
+
+        #endregion
+
+        #region ==Pagination==
+
+        /// <summary>
+        /// 分页查询，返回指定类型
+        /// </summary>
+        /// <param name="paging"></param>
+        /// <returns></returns>
+        IList<TResult> Pagination<TResult>(Paging paging = null);
+
+        /// <summary>
+        /// 分页查询，返回指定类型
+        /// </summary>
+        /// <param name="paging"></param>
+        /// <returns></returns>
+        Task<IList<TResult>> PaginationAsync<TResult>(Paging paging = null);
+
+        #endregion
+
+        #region ==Count==
+
+        /// <summary>
+        /// 查询数量
+        /// </summary>
+        /// <returns></returns>
+        long Count();
+
+        /// <summary>
+        /// 查询数量
+        /// </summary>
+        /// <returns></returns>
+        Task<long> CountAsync();
+
+        #endregion
+
+        #region ==First==
+
+        /// <summary>
+        /// 查询第一条数据，返回指定类型
+        /// </summary>
+        /// <returns></returns>
+        TResult First<TResult>();
+
+        /// <summary>
+        /// 查询第一条数据，返回指定类型
+        /// </summary>
+        /// <returns></returns>
+        Task<TResult> FirstAsync<TResult>();
+
+        #endregion
+
+        #region ==Exists==
 
         /// <summary>
         /// 判断是否存在
@@ -55,78 +83,21 @@ namespace NetSql.Abstractions.SqlQueryable
         bool Exists();
 
         /// <summary>
-        /// 查询第一条数据
-        /// </summary>
-        /// <returns></returns>
-        TEntity First();
-
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <returns></returns>
-        bool Delete();
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        bool Update(Expression<Func<TEntity, TEntity>> expression);
-
-        /// <summary>
-        /// 获取最大值
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> expression);
-
-        /// <summary>
-        /// 获取最小值
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> expression);
-
-        /// <summary>
         /// 判断是否存在
         /// </summary>
         /// <returns></returns>
         Task<bool> ExistsAsync();
 
-        /// <summary>
-        /// 查询第一条数据
-        /// </summary>
-        /// <returns></returns>
-        Task<TEntity> FirstAsync();
+        #endregion
+
+        #region ==获取Sql语句==
 
         /// <summary>
-        /// 删除
-        /// <para>数据不存在也是返回true</para>
+        /// 获取Sql语句
         /// </summary>
         /// <returns></returns>
-        Task<bool> DeleteAsync();
+        string ToSql();
 
-        /// <summary>
-        /// 更新
-        /// <para>数据不存在也是返回true</para>
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> expression);
-
-        /// <summary>
-        /// 删除数据返回影响条数
-        /// </summary>
-        /// <returns></returns>
-        Task<int> DeleteWithAffectedNumAsync();
-
-        /// <summary>
-        /// 更新数据返回影响条数
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        Task<int> UpdateWithAffectedNumAsync(Expression<Func<TEntity, TEntity>> expression);
+        #endregion
     }
 }

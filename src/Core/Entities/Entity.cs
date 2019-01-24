@@ -24,8 +24,8 @@ namespace NetSql.Core.Entities
     /// 包含指定类型主键的软删除实体
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TDeletorKey">删除人主键类型</typeparam>
-    public class EntityWithSoftDelete<TKey, TDeletorKey> : Entity<TKey>
+    /// <typeparam name="TDeleterKey">删除人主键类型</typeparam>
+    public class EntityWithSoftDelete<TKey, TDeleterKey> : Entity<TKey>
     {
         /// <summary>
         /// 是否删除
@@ -40,7 +40,7 @@ namespace NetSql.Core.Entities
         /// <summary>
         /// 删除人
         /// </summary>
-        public TDeletorKey Deletor { get; set; } = default(TDeletorKey);
+        public TDeleterKey Deleter { get; set; } = default(TDeleterKey);
     }
 
     /// <summary>

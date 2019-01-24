@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Microsoft.Extensions.Logging;
 using NetSql.Abstractions;
 using NetSql.Abstractions.Entities;
 using NetSql.Core.Entities;
@@ -14,7 +15,8 @@ namespace NetSql.Core
         /// <param name="name">连接名称</param>
         /// <param name="connectionString">连接字符串</param>
         /// <param name="sqlAdapter">数据库适配器</param>
-        protected DbContextOptionsAbstract(string name, string connectionString, ISqlAdapter sqlAdapter)
+        /// <param name="loggerFactory">日志工厂</param>
+        protected DbContextOptionsAbstract(string name, string connectionString, ISqlAdapter sqlAdapter, ILoggerFactory loggerFactory)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentNullException(nameof(name), "数据库连接名称未配置");
@@ -26,6 +28,7 @@ namespace NetSql.Core
             ConnectionString = connectionString;
             SqlAdapter = sqlAdapter;
             EntityDescriptorCollection = new EntityDescriptorCollection(SqlAdapter, new EntitySqlBuilder());
+            LoggerFactory = loggerFactory;
         }
 
         public string Name { get; }
@@ -37,5 +40,7 @@ namespace NetSql.Core
         public IEntityDescriptorCollection EntityDescriptorCollection { get; }
 
         public abstract IDbConnection OpenConnection();
+
+        public ILoggerFactory LoggerFactory { get; }
     }
 }

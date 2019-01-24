@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Abstractions.Entities;
-using NetSql.Abstractions.Pagination;
 
 namespace NetSql.Abstractions
 {
@@ -51,17 +50,15 @@ namespace NetSql.Abstractions
         /// 批量新增
         /// </summary>
         /// <param name="list">实体集合</param>
-        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
         /// <returns></returns>
-        bool Add(List<TEntity> list, int flushSize = 2048);
+        bool Add(List<TEntity> list);
 
         /// <summary>
         /// 批量新增
         /// </summary>
         /// <param name="list">实体集合</param>
-        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
         /// <returns></returns>
-        Task<bool> AddAsync(List<TEntity> list, int flushSize = 2048);
+        Task<bool> AddAsync(List<TEntity> list);
 
         #endregion
 
@@ -146,26 +143,6 @@ namespace NetSql.Abstractions
         /// </summary>
         /// <returns></returns>
         Task<IList<TEntity>> GetAllAsync();
-
-        #endregion
-
-        #region ==Pagination==
-
-        /// <summary>
-        /// 分页查询
-        /// </summary>
-        /// <param name="paging">分页</param>
-        /// <param name="where">过滤条件</param>
-        /// <returns></returns>
-        IList<TEntity> Pagination(Paging paging = null, Expression<Func<TEntity, bool>> where = null);
-
-        /// <summary>
-        /// 分页查询
-        /// </summary>
-        /// <param name="paging">分页</param>
-        /// <param name="where">过滤条件</param>
-        /// <returns></returns>
-        Task<IList<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null);
 
         #endregion
     }

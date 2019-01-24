@@ -46,6 +46,7 @@ namespace Data.Test
         [Fact]
         public async void BatchInsertAsyncTest()
         {
+            await InsertAsyncTest();
             var list = new List<Article>();
             for (int i = 0; i < 10000; i++)
             {
@@ -69,7 +70,9 @@ namespace Data.Test
             /*
              * 耗时统计，1w数据：
              *
-             * MySql：1010ms
+             * MySql：534ms
+             * SQLite：238ms
+             *
              */
             var useTime = sw.ElapsedMilliseconds;
 
@@ -103,14 +106,14 @@ namespace Data.Test
         {
             var id = await InsertAsyncTest();
 
-            var deletor = Guid.NewGuid();
-            await _articleDb.SoftDeleteAsync(id, deletor);
+            var deleter = Guid.NewGuid();
+            await _articleDb.SoftDeleteAsync(id, deleter);
 
             var article = await _articleDb.GetAsync(id);
 
             Assert.NotNull(article);
             Assert.True(article.IsDeleted);
-            Assert.Equal(article.Deletor, deletor);
+            Assert.Equal(article.Deleter, deleter);
         }
 
         [Fact]
@@ -166,15 +169,17 @@ namespace Data.Test
 
             await _articleDb.InsertAsync(article);
 
-            var list = await _articleDb.LeftJoin<User>((t1, t2) => t1.Author == t2.Id)
+
+            var query = _articleDb.Find().LeftJoin<User>((t1, t2) => t1.Author == t2.Id)
                 .LeftJoin<Category>((t1, t2, t3) => t1.CategoryId == t3.Id).Where((t1, t2, t3) => t1.Id == article.Id)
                 .Select((t1, t2, t3) => new
                 {
                     t1,
                     AuthorName = t2.Name,
                     CategoryName = t3.Name
-                })
-                .ToListAsync();
+                });
+
+            var list = await query.ToListAsync<Article>();
 
             Assert.NotEmpty(list);
             Assert.Equal(list[0].AuthorName, user.Name);

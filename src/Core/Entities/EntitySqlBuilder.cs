@@ -100,7 +100,7 @@ namespace NetSql.Core.Entities
             var sb = new StringBuilder($"UPDATE {descriptor.SqlAdapter.AppendQuote(descriptor.TableName)} SET ");
             sb.AppendFormat("{0}=1,", descriptor.SqlAdapter.AppendQuote("IsDeleted"));
             sb.AppendFormat("{0}={1},", descriptor.SqlAdapter.AppendQuote("DeletedTime"), descriptor.SqlAdapter.AppendParameter("DeletedTime"));
-            sb.AppendFormat("{0}={1} ", descriptor.SqlAdapter.AppendQuote("Deletor"), descriptor.SqlAdapter.AppendParameter("Deletor"));
+            sb.AppendFormat("{0}={1} ", descriptor.SqlAdapter.AppendQuote("Deleter"), descriptor.SqlAdapter.AppendParameter("Deleter"));
 
             var softDeleteSql = sb.ToString();
 

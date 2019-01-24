@@ -8,10 +8,7 @@ using NetSql.Abstractions.SqlQueryable;
 
 namespace NetSql.Abstractions
 {
-    /// <summary>
-    /// 数据集
-    /// </summary>
-    public interface IDbSet<TEntity> where TEntity : IEntity, new()
+    public interface IDbSet
     {
         #region ==属性==
 
@@ -24,118 +21,6 @@ namespace NetSql.Abstractions
         /// 实体信息
         /// </summary>
         IEntityDescriptor EntityDescriptor { get; }
-
-        #endregion
-
-        #region ==Insert==
-
-        /// <summary>
-        /// 新增
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns></returns>
-        bool Insert(TEntity entity);
-
-        /// <summary>
-        /// 新增
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns></returns>
-        Task<bool> InsertAsync(TEntity entity);
-
-        #endregion
-
-        #region ==BatchInsert==
-
-        /// <summary>
-        /// 批量插入
-        /// </summary>
-        /// <param name="entityList">实体集合</param>
-        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
-        /// <returns></returns>
-        bool BatchInsert(List<TEntity> entityList, int flushSize = 2048);
-
-        /// <summary>
-        /// 批量插入
-        /// </summary>
-        /// <param name="entityList">实体集合</param>
-        /// <param name="flushSize">单次执行sql语句大小,单位KB</param>
-        /// <returns></returns>
-        Task<bool> BatchInsertAsync(List<TEntity> entityList, int flushSize = 2048);
-
-        #endregion
-
-        #region ==Delete==
-
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        bool Delete(dynamic id);
-
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<bool> DeleteAsync(dynamic id);
-
-        #endregion
-
-        #region ==SoftDelete==
-
-        /// <summary>
-        /// 软删除
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="deletor">删除人</param>
-        /// <returns></returns>
-        bool SoftDelete(dynamic id, dynamic deletor);
-
-        /// <summary>
-        /// 软删除
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="deletor">删除人</param>
-        /// <returns></returns>
-        Task<bool> SoftDeleteAsync(dynamic id, dynamic deletor);
-
-        #endregion
-
-        #region ==Update==
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns></returns>
-        bool Update(TEntity entity);
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns></returns>
-        Task<bool> UpdateAsync(TEntity entity);
-
-        #endregion
-
-        #region ==Get==
-
-        /// <summary>
-        /// 根据主键查询
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        TEntity Get(dynamic id);
-
-        /// <summary>
-        /// 根据主键查询
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<TEntity> GetAsync(dynamic id);
 
         #endregion
 
@@ -256,32 +141,133 @@ namespace NetSql.Abstractions
         /// <returns></returns>
         Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null, CommandType? commandType = null);
 
+
+
+        #endregion
+    }
+
+    /// <summary>
+    /// 数据集
+    /// </summary>
+    public interface IDbSet<TEntity> : IDbSet where TEntity : IEntity, new()
+    {
+        #region ==Insert==
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns></returns>
+        bool Insert(TEntity entity);
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns></returns>
+        Task<bool> InsertAsync(TEntity entity);
+
+        #endregion
+
+        #region ==BatchInsert==
+
+        /// <summary>
+        /// 批量插入
+        /// </summary>
+        /// <param name="entityList">实体集合</param>
+        /// <param name="flushSize">单次刷新数量</param>
+        /// <returns></returns>
+        bool BatchInsert(List<TEntity> entityList, int flushSize = 10000);
+
+        /// <summary>
+        /// 批量插入
+        /// </summary>
+        /// <param name="entityList">实体集合</param>
+        /// <param name="flushSize">单次刷新数量</param>
+        /// <returns></returns>
+        Task<bool> BatchInsertAsync(List<TEntity> entityList, int flushSize = 10000);
+
+        #endregion
+
+        #region ==Delete==
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool Delete(dynamic id);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteAsync(dynamic id);
+
+        #endregion
+
+        #region ==SoftDelete==
+
+        /// <summary>
+        /// 软删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="deleter">删除人</param>
+        /// <returns></returns>
+        bool SoftDelete(dynamic id, dynamic deleter);
+
+        /// <summary>
+        /// 软删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="deleter">删除人</param>
+        /// <returns></returns>
+        Task<bool> SoftDeleteAsync(dynamic id, dynamic deleter);
+
+        #endregion
+
+        #region ==Update==
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns></returns>
+        bool Update(TEntity entity);
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns></returns>
+        Task<bool> UpdateAsync(TEntity entity);
+
+        #endregion
+
+        #region ==Get==
+
+        /// <summary>
+        /// 根据主键查询
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        TEntity Get(dynamic id);
+
+        /// <summary>
+        /// 根据主键查询
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<TEntity> GetAsync(dynamic id);
+
+        #endregion
+
         /// <summary>
         /// 查询
         /// </summary>
         /// <param name="expression">过滤条件</param>
         /// <returns></returns>
         INetSqlQueryable<TEntity> Find(Expression<Func<TEntity, bool>> expression = null);
-
-        #endregion
-
-        #region ==Pagination==
-
-        /// <summary>
-        /// 左连接
-        /// </summary>
-        /// <typeparam name="TEntity2"></typeparam>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2> LeftJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new();
-
-        /// <summary>
-        /// 内连接
-        /// </summary>
-        /// <typeparam name="TEntity2"></typeparam>
-        /// <param name="onExpression"></param>
-        /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2> InnerJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new();
-
-        #endregion
     }
 }

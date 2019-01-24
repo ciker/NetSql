@@ -1,7 +1,5 @@
 ﻿using Data.Test.Domain.Article;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Data.Test.Infrastructure.Repositories;
 using NetSql.Abstractions;

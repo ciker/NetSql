@@ -1,9 +1,13 @@
 ﻿using System.Linq.Expressions;
 using NetSql.Abstractions.Entities;
+using NetSql.Abstractions.Enums;
 
-namespace NetSql.Core.SqlQueryable
+namespace NetSql.Core.SqlQueryable.Internal
 {
-    internal class JoinDescriptor
+    /// <summary>
+    /// 查询表连接信息
+    /// </summary>
+    internal class QueryJoinDescriptor
     {
         /// <summary>
         /// 连接类型
@@ -24,16 +28,5 @@ namespace NetSql.Core.SqlQueryable
         /// 连接条件
         /// </summary>
         public LambdaExpression On { get; set; }
-    }
-
-
-    /// <summary>
-    /// 连接类型
-    /// </summary>
-    public enum JoinType
-    {
-        Left,
-        Inner,
-        Right
     }
 }

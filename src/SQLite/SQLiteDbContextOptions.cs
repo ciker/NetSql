@@ -1,5 +1,6 @@
 ﻿using System.Data;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
+using Microsoft.Extensions.Logging;
 using NetSql.Core;
 
 namespace NetSql.SQLite
@@ -9,13 +10,13 @@ namespace NetSql.SQLite
     /// </summary>
     public class SQLiteDbContextOptions : DbContextOptionsAbstract
     {
-        public SQLiteDbContextOptions(string name, string connectionString) : base(name, connectionString, new SQLiteAdapter())
+        public SQLiteDbContextOptions(string name, string connectionString, ILoggerFactory loggerFactory = null) : base(name, connectionString, new SQLiteAdapter(), loggerFactory)
         {
         }
 
         public override IDbConnection OpenConnection()
         {
-            return new SqliteConnection(ConnectionString);
+            return new SQLiteConnection(ConnectionString);
         }
     }
 }

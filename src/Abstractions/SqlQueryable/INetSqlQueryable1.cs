@@ -7,11 +7,10 @@ using NetSql.Abstractions.Pagination;
 
 namespace NetSql.Abstractions.SqlQueryable
 {
-    public interface INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> : INetSqlQueryable
-        where TEntity : IEntity, new()
-        where TEntity2 : IEntity, new()
-        where TEntity3 : IEntity, new()
-        where TEntity4 : IEntity, new()
+    /// <summary>
+    /// Sql构造器
+    /// </summary>
+    public interface INetSqlQueryable<TEntity> : INetSqlQueryable where TEntity : IEntity, new()
     {
         #region ==Sort==
 
@@ -20,14 +19,14 @@ namespace NetSql.Abstractions.SqlQueryable
         /// </summary>
         /// <param name="colName"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> OrderBy(string colName);
+        INetSqlQueryable<TEntity> OrderBy(string colName);
 
         /// <summary>
         /// 降序
         /// </summary>
         /// <param name="colName"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> OrderByDescending(string colName);
+        INetSqlQueryable<TEntity> OrderByDescending(string colName);
 
         /// <summary>
         /// 升序
@@ -35,7 +34,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TKey"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> OrderBy<TKey>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TKey>> expression);
+        INetSqlQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> expression);
 
         /// <summary>
         /// 降序
@@ -43,14 +42,14 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TKey"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> OrderByDescending<TKey>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TKey>> expression);
+        INetSqlQueryable<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> expression);
 
         /// <summary>
         /// 排序
         /// </summary>
         /// <param name="sort"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> Order(Sort sort);
+        INetSqlQueryable<TEntity> Order(Sort sort);
 
         #endregion
 
@@ -61,7 +60,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// </summary>
         /// <param name="expression">过滤条件</param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> Where(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, bool>> expression);
+        INetSqlQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression);
 
         /// <summary>
         /// 过滤
@@ -69,7 +68,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <param name="ifCondition">添加条件</param>
         /// <param name="expression">条件</param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> WhereIf(bool ifCondition, Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, bool>> expression);
+        INetSqlQueryable<TEntity> WhereIf(bool ifCondition, Expression<Func<TEntity, bool>> expression);
 
         #endregion
 
@@ -81,7 +80,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <param name="skip">跳过前几条数据</param>
         /// <param name="take">取前几条数据</param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> Limit(int skip, int take);
+        INetSqlQueryable<TEntity> Limit(int skip, int take);
 
         #endregion
 
@@ -91,7 +90,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// 查询指定列
         /// </summary>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4> Select<TResult>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TResult>> selectExpression);
+        INetSqlQueryable<TEntity> Select<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         #endregion
 
@@ -100,26 +99,103 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <summary>
         /// 左连接
         /// </summary>
-        /// <typeparam name="TEntity5"></typeparam>
-        /// <param name="onExpression"></param>
+        /// <typeparam name="TEntity2"></typeparam>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4, TEntity5> LeftJoin<TEntity5>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TEntity5, bool>> onExpression) where TEntity5 : IEntity, new();
+        INetSqlQueryable<TEntity, TEntity2> LeftJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new();
 
         /// <summary>
         /// 内连接
         /// </summary>
-        /// <typeparam name="TEntity5"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
         /// <param name="onExpression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4, TEntity5> InnerJoin<TEntity5>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TEntity5, bool>> onExpression) where TEntity5 : IEntity, new();
+        INetSqlQueryable<TEntity, TEntity2> InnerJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new();
 
         /// <summary>
         /// 右连接
         /// </summary>
-        /// <typeparam name="TEntity5"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
         /// <param name="onExpression"></param>
         /// <returns></returns>
-        INetSqlQueryable<TEntity, TEntity2, TEntity3, TEntity4, TEntity5> RightJoin<TEntity5>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TEntity5, bool>> onExpression) where TEntity5 : IEntity, new();
+        INetSqlQueryable<TEntity, TEntity2> RightJoin<TEntity2>(Expression<Func<TEntity, TEntity2, bool>> onExpression) where TEntity2 : IEntity, new();
+
+        #endregion
+
+        #region ==First==
+
+        /// <summary>
+        /// 查询第一条数据
+        /// </summary>
+        /// <returns></returns>
+        TEntity First();
+
+        /// <summary>
+        /// 查询第一条数据
+        /// </summary>
+        /// <returns></returns>
+        Task<TEntity> FirstAsync();
+
+        #endregion
+
+        #region ==Delete==
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <returns></returns>
+        bool Delete();
+
+        /// <summary>
+        /// 删除
+        /// <para>数据不存在也是返回true</para>
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> DeleteAsync();
+
+        /// <summary>
+        /// 删除数据返回影响条数
+        /// </summary>
+        /// <returns></returns>
+        int DeleteWithAffectedNum();
+
+        /// <summary>
+        /// 删除数据返回影响条数
+        /// </summary>
+        /// <returns></returns>
+        Task<int> DeleteWithAffectedNumAsync();
+
+        #endregion
+
+        #region ==Update==
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        bool Update(Expression<Func<TEntity, TEntity>> expression);
+
+        /// <summary>
+        /// 更新
+        /// <para>数据不存在也是返回true</para>
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> expression);
+
+        /// <summary>
+        /// 更新数据返回影响条数
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        int UpdateWithAffectedNum(Expression<Func<TEntity, TEntity>> expression);
+
+        /// <summary>
+        /// 更新数据返回影响条数
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        Task<int> UpdateWithAffectedNumAsync(Expression<Func<TEntity, TEntity>> expression);
 
         #endregion
 
@@ -131,7 +207,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        TResult Max<TResult>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TResult>> expression);
+        TResult Max<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         /// <summary>
         /// 获取最大值
@@ -139,7 +215,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TResult>> expression);
+        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         #endregion
 
@@ -151,7 +227,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        TResult Min<TResult>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TResult>> expression);
+        TResult Min<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         /// <summary>
         /// 获取最小值
@@ -159,7 +235,7 @@ namespace NetSql.Abstractions.SqlQueryable
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TEntity2, TEntity3, TEntity4, TResult>> expression);
+        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> expression);
 
         #endregion
 

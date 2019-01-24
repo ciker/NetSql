@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.Extensions.Logging;
 using NetSql.Abstractions.Entities;
 
 namespace NetSql.Abstractions
@@ -11,7 +12,7 @@ namespace NetSql.Abstractions
         /// <summary>
         /// 名称
         /// </summary>
-        string Name { get;}
+        string Name { get; }
 
         /// <summary>
         /// 数据库适配器
@@ -33,5 +34,10 @@ namespace NetSql.Abstractions
         /// </summary>
         /// <returns></returns>
         IDbConnection OpenConnection();
+
+        /// <summary>
+        /// 日志工厂
+        /// </summary>
+        ILoggerFactory LoggerFactory { get; }
     }
 }

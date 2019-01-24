@@ -4,8 +4,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NetSql.Abstractions;
 using NetSql.Abstractions.Entities;
-using NetSql.Abstractions.Pagination;
-using NetSql.Abstractions.SqlQueryable;
 
 namespace NetSql.Core
 {
@@ -57,14 +55,14 @@ namespace NetSql.Core
             return Db.InsertAsync(entity);
         }
 
-        public virtual bool Add(List<TEntity> list, int flushSize = 0)
+        public virtual bool Add(List<TEntity> list)
         {
-            return Db.BatchInsert(list, flushSize);
+            return Db.BatchInsert(list);
         }
 
-        public virtual Task<bool> AddAsync(List<TEntity> list, int flushSize = 0)
+        public virtual Task<bool> AddAsync(List<TEntity> list)
         {
-            return Db.BatchInsertAsync(list, flushSize);
+            return Db.BatchInsertAsync(list);
         }
 
         #endregion
@@ -131,58 +129,6 @@ namespace NetSql.Core
         public Task<IList<TEntity>> GetAllAsync()
         {
             return Db.Find().ToListAsync();
-        }
-
-        #endregion
-
-        #region ==Pagination==
-
-        public virtual IList<TEntity> Pagination(Paging paging = null, Expression<Func<TEntity, bool>> where = null)
-        {
-            var query = Db.Find(where);
-
-            return Pagination(paging, query);
-        }
-
-        public virtual Task<IList<TEntity>> PaginationAsync(Paging paging = null, Expression<Func<TEntity, bool>> where = null)
-        {
-            var query = Db.Find(where);
-
-            return PaginationAsync(paging, query);
-        }
-
-        protected IList<TEntity> Pagination(Paging paging, INetSqlQueryable<TEntity> query)
-        {
-            if (paging == null)
-                paging = new Paging();
-
-            if (query == null)
-                query = Db.Find();
-
-            //排序
-            foreach (var sort in paging.OrderBy)
-            {
-                query.Order(sort);
-            }
-
-            return query.Pagination(paging);
-        }
-
-        protected Task<IList<TEntity>> PaginationAsync(Paging paging, INetSqlQueryable<TEntity> query)
-        {
-            if (paging == null)
-                paging = new Paging();
-
-            if (query == null)
-                query = Db.Find();
-
-            //排序
-            foreach (var sort in paging.OrderBy)
-            {
-                query.Order(sort);
-            }
-
-            return query.PaginationAsync(paging);
         }
 
         #endregion

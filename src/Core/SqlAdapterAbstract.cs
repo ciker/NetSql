@@ -111,7 +111,8 @@ namespace NetSql.Core
             }
         }
 
-        public abstract string GeneratePagingSql(string @select, string table, string where, string sort, int skip, int take);
+        public abstract string GeneratePagingSql(string select, string table, string where, string sort, int skip, int take);
 
+        public abstract string GenerateFirstSql(string select, string table, string where, string sort);
     }
 }

@@ -107,6 +107,16 @@ namespace NetSql.Abstractions
         /// <returns></returns>
         string GeneratePagingSql(string select, string table, string where, string sort, int skip, int take);
 
+        /// <summary>
+        /// 生成获取第一条数据的Sql
+        /// </summary>
+        /// <param name="select"></param>
+        /// <param name="table"></param>
+        /// <param name="where"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        string GenerateFirstSql(string select, string table, string where, string sort);
+
         #endregion
 
     }
